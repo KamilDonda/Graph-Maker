@@ -7,7 +7,7 @@ class InputFieldWidget extends StatelessWidget {
   final bool isOpen;
   final bool isDigitsOnly;
   final double width;
-  final int max;
+  final double max;
 
   const InputFieldWidget({
     Key? key,
@@ -28,9 +28,9 @@ class InputFieldWidget extends StatelessWidget {
             child: TextFormField(
               inputFormatters: [
                 UpperCaseTextFormatter(),
-                NumericalRangeFormatter(max: max),
                 LengthLimitingTextInputFormatter(isDigitsOnly ? 4 : 2),
                 if (isDigitsOnly) FilteringTextInputFormatter.digitsOnly,
+                if (isDigitsOnly) NumericalRangeFormatter(max: max),
               ],
               controller: controller,
               style: const TextStyle(
@@ -66,7 +66,8 @@ class UpperCaseTextFormatter extends TextInputFormatter {
 }
 
 class NumericalRangeFormatter extends TextInputFormatter {
-  final int max;
+  final double max;
+
   NumericalRangeFormatter({required this.max});
 
   @override
@@ -74,6 +75,16 @@ class NumericalRangeFormatter extends TextInputFormatter {
     TextEditingValue oldValue,
     TextEditingValue newValue,
   ) {
+    if (!isNumeric(newValue.text)) {
+      return newValue;
+    }
     return int.parse(newValue.text) > max ? oldValue : newValue;
   }
+}
+
+bool isNumeric(String? s) {
+  if (s == null) {
+    return false;
+  }
+  return double.tryParse(s) != null;
 }

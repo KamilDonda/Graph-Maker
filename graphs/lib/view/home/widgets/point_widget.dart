@@ -33,7 +33,7 @@ class PointWidget extends SpriteWidget {
               width: 5,
             ),
           ),
-          child: Text(point.name, style: const TextStyle(fontSize: 50)),
+          child: Text(point.name, style: const TextStyle(fontSize: 35)),
         ),
       ),
     );

@@ -105,7 +105,7 @@ class _FormWidgetState extends State<FormWidget> {
             isOpen: isOpen,
             controller: xController,
             isDigitsOnly: true,
-            max: MAX_AREA_X,
+            max: AREA_SIZE_X - DEFAULT_POINT_SIZE,
           ),
           const SizedBox(height: 10),
           InputFieldWidget(
@@ -113,7 +113,7 @@ class _FormWidgetState extends State<FormWidget> {
             isOpen: isOpen,
             controller: yController,
             isDigitsOnly: true,
-            max: MAX_AREA_Y,
+            max: AREA_SIZE_Y - DEFAULT_POINT_SIZE,
           ),
           const SizedBox(height: 10),
           Row(

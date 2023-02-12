@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:graphs/constants/sizes.dart';
 import 'package:graphs/models/sprite.dart';
 
 class Point extends Sprite {
@@ -13,6 +14,6 @@ class Point extends Sprite {
     required this.x,
     required this.y,
     required this.color,
-    this.size = 120,
+    this.size = DEFAULT_POINT_SIZE,
   }) : super(x: x, y: y);
 }
