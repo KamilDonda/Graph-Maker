@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_material_color_picker/flutter_material_color_picker.dart';
-import 'package:graphs/view/home/widgets/input_field.dart';
+import 'package:graphs/constants/sizes.dart';
+import 'package:graphs/models/point.dart';
+import 'package:graphs/view/home/cubit/points_cubit.dart';
+import 'package:graphs/view/home/widgets/input_field_widget.dart';
 
 class FormWidget extends StatefulWidget {
   const FormWidget({Key? key}) : super(key: key);
@@ -11,8 +15,8 @@ class FormWidget extends StatefulWidget {
 
 class _FormWidgetState extends State<FormWidget> {
   final TextEditingController nameController = TextEditingController();
-  static const double MAX_WIDTH = 220;
-  static const double MIN_WIDTH = 60;
+  final TextEditingController xController = TextEditingController();
+  final TextEditingController yController = TextEditingController();
   bool isOpen = true;
 
   ColorSwatch? _tempMainColor;
@@ -55,10 +59,18 @@ class _FormWidgetState extends State<FormWidget> {
     );
   }
 
+  double _parseString(String value) {
+    try {
+      return double.parse(value);
+    } on Exception {
+      return 200;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: isOpen ? MAX_WIDTH : MIN_WIDTH,
+      width: isOpen ? FORM_MAX_WIDTH : FORM_MIN_WIDTH,
       padding: const EdgeInsets.all(10),
       child: Column(
         children: [
@@ -85,11 +97,24 @@ class _FormWidgetState extends State<FormWidget> {
               ],
             ),
           ),
-          InputFieldWidget(labelText: "Name", isOpen: isOpen),
+          InputFieldWidget(
+              labelText: "Name", isOpen: isOpen, controller: nameController),
           const SizedBox(height: 10),
-          InputFieldWidget(labelText: "X", isOpen: isOpen),
+          InputFieldWidget(
+            labelText: "X",
+            isOpen: isOpen,
+            controller: xController,
+            isDigitsOnly: true,
+            max: MAX_AREA_X,
+          ),
           const SizedBox(height: 10),
-          InputFieldWidget(labelText: "Y", isOpen: isOpen),
+          InputFieldWidget(
+            labelText: "Y",
+            isOpen: isOpen,
+            controller: yController,
+            isDigitsOnly: true,
+            max: MAX_AREA_Y,
+          ),
           const SizedBox(height: 10),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -109,7 +134,13 @@ class _FormWidgetState extends State<FormWidget> {
           const SizedBox(height: 50),
           if (isOpen)
             FloatingActionButton.extended(
-              onPressed: () {},
+              onPressed: () {
+                BlocProvider.of<PointsCubit>(context).addPoint(Point(
+                    name: nameController.text,
+                    x: _parseString(xController.text),
+                    y: _parseString(yController.text),
+                    color: _mainColor!));
+              },
               label: Container(
                 width: 200,
                 padding: const EdgeInsets.symmetric(horizontal: 20),

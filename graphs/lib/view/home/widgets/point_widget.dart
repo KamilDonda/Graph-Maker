@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:graphs/models/point.dart';
+import 'package:graphs/view/home/cubit/points_cubit.dart';
 
 class PointWidget extends StatelessWidget {
-  PointWidget({super.key, required this.point});
+  PointWidget({super.key, required this.point, required this.index});
 
   final Point point;
+  final int index;
   late double size = 120;
 
   @override
@@ -16,6 +19,7 @@ class PointWidget extends StatelessWidget {
         onPanUpdate: (position) {
           point.x += position.delta.dx;
           point.y += position.delta.dy;
+          BlocProvider.of<PointsCubit>(context).updatePoint(index, point);
         },
         child: Container(
           width: size,
