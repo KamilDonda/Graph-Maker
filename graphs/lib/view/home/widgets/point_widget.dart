@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:graphs/models/point.dart';
 import 'package:graphs/view/home/cubit/points_cubit.dart';
+import 'package:graphs/view/home/widgets/sprite_widget.dart';
 
-class PointWidget extends StatelessWidget {
-  PointWidget({super.key, required this.point, required this.index});
+class PointWidget extends SpriteWidget {
+  const PointWidget({super.key, required this.point, required this.index})
+      : super(sprite: point);
 
   final Point point;
   final int index;
-  late double size = 120;
 
   @override
   Widget build(BuildContext context) {
@@ -17,13 +18,12 @@ class PointWidget extends StatelessWidget {
       left: point.x,
       child: GestureDetector(
         onPanUpdate: (position) {
-          point.x += position.delta.dx;
-          point.y += position.delta.dy;
-          BlocProvider.of<PointsCubit>(context).updatePoint(index, point);
+          BlocProvider.of<PointsCubit>(context)
+              .updatePoint(position.delta.dx, position.delta.dy, index);
         },
         child: Container(
-          width: size,
-          height: size,
+          width: point.size,
+          height: point.size,
           alignment: Alignment.center,
           decoration: BoxDecoration(
             color: point.color,
