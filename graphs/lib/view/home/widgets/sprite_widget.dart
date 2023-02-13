@@ -9,13 +9,21 @@ class SpriteWidget extends StatelessWidget {
 
   final Sprite sprite;
 
+  void click(BuildContext context) {
+    BlocProvider.of<PointsCubit>(context).focusIndex(0);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Positioned(
       top: sprite.y,
       left: sprite.x,
       child: GestureDetector(
+        onTapDown: (details) {
+          click(context);
+        },
         onPanUpdate: (position) {
+          click(context);
           BlocProvider.of<PointsCubit>(context)
               .updateSprite(position.delta.dx, position.delta.dy);
         },

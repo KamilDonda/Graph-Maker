@@ -11,15 +11,30 @@ class PointWidget extends SpriteWidget {
   final Point point;
   final int index;
 
+  void clickPoint(BuildContext context) {
+    BlocProvider.of<PointsCubit>(context).focusIndex(index);
+  }
+
   @override
   Widget build(BuildContext context) {
+    bool isFocused =
+        BlocProvider.of<PointsCubit>(context).getFocusedIndex() == index;
     return Positioned(
       top: point.y,
       left: point.x,
       child: GestureDetector(
+        onTapDown: (details) {
+          clickPoint(context);
+        },
+        onPanStart: (details) {
+          clickPoint(context);
+        },
         onPanUpdate: (position) {
           BlocProvider.of<PointsCubit>(context)
               .updatePoint(position.delta.dx, position.delta.dy, index);
+        },
+        onLongPressStart: (details) {
+          BlocProvider.of<PointsCubit>(context).startPoint(index);
         },
         child: Container(
           width: point.size,
@@ -29,11 +44,16 @@ class PointWidget extends SpriteWidget {
             color: point.color,
             shape: BoxShape.circle,
             border: Border.all(
-              color: Colors.black,
-              width: 5,
+              color: isFocused ? Colors.black : const Color(0xFF282828),
+              width: isFocused ? 5 : 3,
             ),
           ),
-          child: Text(point.name, style: const TextStyle(fontSize: 35)),
+          child: Text(
+            point.name,
+            style: TextStyle(
+                fontSize: 35,
+                fontWeight: isFocused ? FontWeight.bold : FontWeight.normal),
+          ),
         ),
       ),
     );
