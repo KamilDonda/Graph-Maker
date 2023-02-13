@@ -22,6 +22,7 @@ class _FormWidgetState extends State<FormWidget> {
 
   ColorSwatch? _tempMainColor = Colors.blue;
   ColorSwatch? _mainColor = Colors.blue;
+  bool wasEdited = false;
 
   void _openDialog(String title, Widget content) {
     showDialog(
@@ -33,13 +34,14 @@ class _FormWidgetState extends State<FormWidget> {
           content: content,
           actions: [
             TextButton(
-              child: const Text('CANCEL'),
               onPressed: Navigator.of(context).pop,
+              child: const Text('CANCEL'),
             ),
             TextButton(
               child: const Text('SUBMIT'),
               onPressed: () {
                 Navigator.of(context).pop();
+                wasEdited = true;
                 setState(() => _mainColor = _tempMainColor);
               },
             ),
@@ -55,7 +57,7 @@ class _FormWidgetState extends State<FormWidget> {
       MaterialColorPicker(
         selectedColor: _mainColor,
         allowShades: false,
-        onMainColorChange: (color) => setState(() => _tempMainColor = color),
+        onMainColorChange: (color) => _tempMainColor = color,
       ),
     );
   }
@@ -80,16 +82,19 @@ class _FormWidgetState extends State<FormWidget> {
       child: BlocBuilder<PointsCubit, List<Sprite>>(builder: (_, points) {
         var index = BlocProvider.of<PointsCubit>(context).getFocusedIndex();
         if (index != 0) {
-          var point = points[index] as Point;
-          nameController.text = point.name.toString();
-          xController.text = point.x.toString();
-          yController.text = point.y.toString();
-          _mainColor = point.color as ColorSwatch;
+          if (!wasEdited) {
+            var point = points[index] as Point;
+            nameController.text = point.name.toString();
+            xController.text = point.x.toString();
+            yController.text = point.y.toString();
+            _mainColor = point.color as ColorSwatch;
+          }
         } else {
           nameController.text = "";
           xController.text = "";
           yController.text = "";
         }
+        wasEdited = false;
 
         return Column(
           children: [
@@ -141,7 +146,7 @@ class _FormWidgetState extends State<FormWidget> {
                 isOpen
                     ? const Text("Select color", style: TextStyle(fontSize: 25))
                     : const SizedBox(),
-                index > 1 || isOpen
+                index > 0 || isOpen
                     ? GestureDetector(
                         onTap: _openMainColorPicker,
                         child: CircleColor(
@@ -171,6 +176,32 @@ class _FormWidgetState extends State<FormWidget> {
                     children: const [
                       Text("Add new point"),
                       Icon(Icons.add),
+                    ],
+                  ),
+                ),
+              ),
+            const SizedBox(height: 10),
+            if (index > 0 && isOpen)
+              FloatingActionButton.extended(
+                onPressed: () {
+                  BlocProvider.of<PointsCubit>(context).editPoint(
+                      Point(
+                          name: nameController.text,
+                          x: _parseString(xController.text),
+                          y: _parseString(yController.text),
+                          color: _mainColor!),
+                      index);
+                },
+                backgroundColor: Colors.green,
+                label: Container(
+                  width: 200,
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  alignment: Alignment.center,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: const [
+                      Text("Edit this point"),
+                      Icon(Icons.edit),
                     ],
                   ),
                 ),
