@@ -207,6 +207,26 @@ class _FormWidgetState extends State<FormWidget> {
                   ),
                 ),
               ),
+            const SizedBox(height: 10),
+            if (index > 0 && isOpen)
+              FloatingActionButton.extended(
+                onPressed: () {
+                  BlocProvider.of<PointsCubit>(context).deletePoint(index);
+                },
+                backgroundColor: Colors.red,
+                label: Container(
+                  width: 200,
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  alignment: Alignment.center,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: const [
+                      Text("Delete this point"),
+                      Icon(Icons.delete),
+                    ],
+                  ),
+                ),
+              ),
             Expanded(
               child: Align(
                 alignment: Alignment.bottomCenter,

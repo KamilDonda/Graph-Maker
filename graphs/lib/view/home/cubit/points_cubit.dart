@@ -58,7 +58,14 @@ class PointsCubit extends Cubit<List<Sprite>> {
     emit([..._sprites]);
   }
 
+  void deletePoint(int index) {
+    _focusedIndex = 0;
+    _sprites.removeAt(index);
+    emit([..._sprites]);
+  }
+
   void clearAll() {
+    _focusedIndex = 0;
     if (_sprites.length > 1) _sprites.removeRange(1, _sprites.length);
     emit([..._sprites]);
   }

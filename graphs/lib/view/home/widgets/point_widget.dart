@@ -24,15 +24,12 @@ class PointWidget extends SpriteWidget {
       left: point.x,
       child: GestureDetector(
         onTapDown: (details) {
-          // print("onTapDown:  ${point.x}, ${point.y}");
           clickPoint(context);
         },
         onPanStart: (details) {
-          // print("onPanStart: ${point.x}, ${point.y}");
           clickPoint(context);
         },
         onPanUpdate: (position) {
-          // print("onPanUpdate: ${point.x}, ${point.y}");
           BlocProvider.of<PointsCubit>(context)
               .updatePoint(position.delta.dx, position.delta.dy, index);
         },
