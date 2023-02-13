@@ -9,6 +9,14 @@ class InputFieldWidget extends StatelessWidget {
   final double width;
   final double max;
 
+  String displayText() {
+    if (isDigitsOnly) {
+      return controller.text;
+    } else {
+      return controller.text.isEmpty ? "" : controller.text[0];
+    }
+  }
+
   const InputFieldWidget({
     Key? key,
     required this.controller,
@@ -47,8 +55,8 @@ class InputFieldWidget extends StatelessWidget {
             alignment: Alignment.center,
             height: 50,
             child: Text(
-              controller.text.isEmpty ? labelText[0] : controller.text[0],
-              style: const TextStyle(fontSize: 30),
+              displayText(),
+              style: const TextStyle(fontSize: 16),
             ),
           );
   }

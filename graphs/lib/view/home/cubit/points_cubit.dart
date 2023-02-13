@@ -59,4 +59,13 @@ class PointsCubit extends Cubit<List<Sprite>> {
   }
 
   void getPoints() => emit(_sprites);
+
+  int _focusedIndex = 0;
+
+  int getFocusedIndex() => _focusedIndex;
+
+  void focusIndex(int index) {
+    _focusedIndex = index;
+    emit([..._sprites]);
+  }
 }
