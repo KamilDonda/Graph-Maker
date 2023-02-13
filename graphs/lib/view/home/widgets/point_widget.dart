@@ -33,6 +33,9 @@ class PointWidget extends SpriteWidget {
           BlocProvider.of<PointsCubit>(context)
               .updatePoint(position.delta.dx, position.delta.dy, index);
         },
+        onLongPressStart: (details) {
+          BlocProvider.of<PointsCubit>(context).startPoint(index);
+        },
         child: Container(
           width: point.size,
           height: point.size,

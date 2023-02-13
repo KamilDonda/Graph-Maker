@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:graphs/models/line.dart';
 import 'package:graphs/models/point.dart';
 import 'package:graphs/models/sprite.dart';
 
@@ -8,9 +9,10 @@ class PointsCubit extends Cubit<List<Sprite>> {
 
   final List<Sprite> _sprites = [
     Sprite(x: 0, y: 0),
-    Point(name: "", x: 600, y: 200, color: Colors.blue),
-    Point(name: "", x: 850, y: 350, color: Colors.blue),
+    Point(name: "", x: 600, y: 100, color: Colors.blue),
     Point(name: "", x: 300, y: 300, color: Colors.blue),
+    Point(name: "", x: 600, y: 300, color: Colors.blue),
+    Point(name: "", x: 600, y: 500, color: Colors.blue),
   ];
 
   void updatePoint(double dx, double dy, int index) {
@@ -78,6 +80,43 @@ class PointsCubit extends Cubit<List<Sprite>> {
 
   void focusIndex(int index) {
     _focusedIndex = index;
+    emit([..._sprites]);
+  }
+
+  int _startIndex = 0;
+
+  void startPoint(int index) {
+    if (_startIndex == 0) {
+      _startIndex = index;
+    } else {
+      endPoint(index);
+    }
+  }
+
+  void endPoint(int index) {
+    var p1 = _sprites[_startIndex] as Point;
+    var p2 = _sprites[index] as Point;
+
+    var x1 = p1.x + p1.size / 2;
+    var y1 = p1.y + p1.size / 2;
+
+    var x2 = p2.x + p2.size / 2;
+    var y2 = p2.y + p2.size / 2;
+
+    if (x2 < x1) {
+      var xt = x1;
+      x1 = x2;
+      x2 = xt;
+
+      var yt = y1;
+      y1 = y2;
+      y2 = yt;
+    }
+
+    var line = Line(x1: x1, y1: y1, x2: x2, y2: y2);
+    _sprites.add(line);
+    _startIndex = 0;
+
     emit([..._sprites]);
   }
 }
