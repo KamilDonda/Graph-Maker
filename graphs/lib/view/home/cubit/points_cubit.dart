@@ -8,9 +8,9 @@ class PointsCubit extends Cubit<List<Sprite>> {
 
   final List<Sprite> _sprites = [
     Sprite(x: 0, y: 0),
-    Point(name: "1", x: 600, y: 200, color: Colors.red),
-    Point(name: "2", x: 850, y: 350, color: Colors.blue),
-    Point(name: "3", x: 300, y: 300, color: Colors.green),
+    Point(name: "", x: 600, y: 200, color: Colors.blue),
+    Point(name: "", x: 850, y: 350, color: Colors.blue),
+    Point(name: "", x: 300, y: 300, color: Colors.blue),
   ];
 
   void updatePoint(double dx, double dy, int index) {
