@@ -19,7 +19,7 @@ class _FormWidgetState extends State<FormWidget> {
   final TextEditingController yController = TextEditingController();
   bool isOpen = true;
 
-  ColorSwatch? _tempMainColor;
+  ColorSwatch? _tempMainColor = Colors.blue;
   ColorSwatch? _mainColor = Colors.blue;
 
   void _openDialog(String title, Widget content) {
