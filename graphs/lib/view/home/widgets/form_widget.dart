@@ -93,6 +93,7 @@ class _FormWidgetState extends State<FormWidget> {
           nameController.text = "";
           xController.text = "";
           yController.text = "";
+          if (!wasEdited) _mainColor = Colors.blue;
         }
         wasEdited = false;
 
