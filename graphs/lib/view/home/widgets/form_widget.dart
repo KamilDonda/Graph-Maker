@@ -32,11 +32,11 @@ class _FormWidgetState extends State<FormWidget> {
           content: content,
           actions: [
             TextButton(
-              child: Text('CANCEL'),
+              child: const Text('CANCEL'),
               onPressed: Navigator.of(context).pop,
             ),
             TextButton(
-              child: Text('SUBMIT'),
+              child: const Text('SUBMIT'),
               onPressed: () {
                 Navigator.of(context).pop();
                 setState(() => _mainColor = _tempMainColor);
@@ -65,6 +65,10 @@ class _FormWidgetState extends State<FormWidget> {
     } on Exception {
       return 200;
     }
+  }
+
+  void clearButtonClick(BuildContext context) {
+    BlocProvider.of<PointsCubit>(context).clearAll();
   }
 
   @override
@@ -154,6 +158,39 @@ class _FormWidgetState extends State<FormWidget> {
                 ),
               ),
             ),
+          Expanded(
+            child: Align(
+              alignment: Alignment.bottomCenter,
+              child: Row(
+                children: [
+                  if (isOpen)
+                    ElevatedButton.icon(
+                      onPressed: () {
+                        clearButtonClick(context);
+                      },
+                      icon: const Icon(Icons.clear),
+                      label: const Text("Clear all"),
+                      style:
+                          ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                    ),
+                  if (!isOpen)
+                    Ink(
+                      decoration: const ShapeDecoration(
+                        color: Colors.red,
+                        shape: CircleBorder(),
+                      ),
+                      child: IconButton(
+                        icon: const Icon(Icons.clear),
+                        color: Colors.white,
+                        onPressed: () {
+                          clearButtonClick(context);
+                        },
+                      ),
+                    ),
+                ],
+              ),
+            ),
+          ),
         ],
       ),
     );

@@ -53,5 +53,10 @@ class PointsCubit extends Cubit<List<Sprite>> {
     emit([..._sprites]);
   }
 
+  void clearAll() {
+    if (_sprites.length > 1) _sprites.removeRange(1, _sprites.length);
+    emit([..._sprites]);
+  }
+
   void getPoints() => emit(_sprites);
 }
