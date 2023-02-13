@@ -80,10 +80,10 @@ class _FormWidgetState extends State<FormWidget> {
       width: isOpen ? FORM_MAX_WIDTH : FORM_MIN_WIDTH,
       padding: const EdgeInsets.all(10),
       child: BlocBuilder<PointsCubit, List<Sprite>>(builder: (_, points) {
-        var index = BlocProvider.of<PointsCubit>(context).getFocusedIndex();
-        if (index != 0) {
+        var id = BlocProvider.of<PointsCubit>(context).getFocusedID();
+        if (id != 0) {
           if (!wasEdited) {
-            var point = points[index] as Point;
+            var point = points.firstWhere((e) => e.id == id) as Point;
             nameController.text = point.name.toString();
             xController.text = point.x.toString();
             yController.text = point.y.toString();
@@ -147,7 +147,7 @@ class _FormWidgetState extends State<FormWidget> {
                 isOpen
                     ? const Text("Select color", style: TextStyle(fontSize: 25))
                     : const SizedBox(),
-                index > 0 || isOpen
+                id > 0 || isOpen
                     ? GestureDetector(
                         onTap: _openMainColorPicker,
                         child: CircleColor(
@@ -182,16 +182,16 @@ class _FormWidgetState extends State<FormWidget> {
                 ),
               ),
             const SizedBox(height: 10),
-            if (index > 0 && isOpen)
+            if (id > 0 && isOpen)
               FloatingActionButton.extended(
                 onPressed: () {
                   BlocProvider.of<PointsCubit>(context).editPoint(
-                      Point(
-                          name: nameController.text,
-                          x: _parseString(xController.text),
-                          y: _parseString(yController.text),
-                          color: _mainColor!),
-                      index);
+                    id,
+                    nameController.text,
+                    _parseString(xController.text),
+                    _parseString(yController.text),
+                    _mainColor!,
+                  );
                 },
                 backgroundColor: Colors.green,
                 label: Container(
@@ -208,10 +208,10 @@ class _FormWidgetState extends State<FormWidget> {
                 ),
               ),
             const SizedBox(height: 10),
-            if (index > 0 && isOpen)
+            if (id > 0 && isOpen)
               FloatingActionButton.extended(
                 onPressed: () {
-                  BlocProvider.of<PointsCubit>(context).deletePoint(index);
+                  BlocProvider.of<PointsCubit>(context).deletePoint(id);
                 },
                 backgroundColor: Colors.red,
                 label: Container(

@@ -24,7 +24,7 @@ class GraphAreaWidget extends StatelessWidget {
                   (index, sprite) => index == 0
                       ? SpriteWidget(sprite: sprite)
                       : sprite is Point
-                          ? PointWidget(point: sprite, index: index)
+                          ? PointWidget(point: sprite)
                           : LineWidget(line: sprite as Line),
                 )
                 .toList(),

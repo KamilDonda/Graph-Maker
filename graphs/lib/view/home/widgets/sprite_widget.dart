@@ -10,7 +10,7 @@ class SpriteWidget extends StatelessWidget {
   final Sprite sprite;
 
   void click(BuildContext context) {
-    BlocProvider.of<PointsCubit>(context).focusIndex(0);
+    BlocProvider.of<PointsCubit>(context).focusSprite(0);
   }
 
   @override

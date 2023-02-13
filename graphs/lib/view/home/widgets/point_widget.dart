@@ -5,20 +5,18 @@ import 'package:graphs/view/home/cubit/points_cubit.dart';
 import 'package:graphs/view/home/widgets/sprite_widget.dart';
 
 class PointWidget extends SpriteWidget {
-  const PointWidget({super.key, required this.point, required this.index})
-      : super(sprite: point);
+  const PointWidget({super.key, required this.point}) : super(sprite: point);
 
   final Point point;
-  final int index;
 
   void clickPoint(BuildContext context) {
-    BlocProvider.of<PointsCubit>(context).focusIndex(index);
+    BlocProvider.of<PointsCubit>(context).focusSprite(point.id);
   }
 
   @override
   Widget build(BuildContext context) {
     bool isFocused =
-        BlocProvider.of<PointsCubit>(context).getFocusedIndex() == index;
+        BlocProvider.of<PointsCubit>(context).getFocusedID() == point.id;
     return Positioned(
       top: point.y,
       left: point.x,
@@ -31,10 +29,10 @@ class PointWidget extends SpriteWidget {
         },
         onPanUpdate: (position) {
           BlocProvider.of<PointsCubit>(context)
-              .updatePoint(position.delta.dx, position.delta.dy, index);
+              .updatePoint(position.delta.dx, position.delta.dy, point.id);
         },
         onLongPressStart: (details) {
-          BlocProvider.of<PointsCubit>(context).startPoint(index);
+          BlocProvider.of<PointsCubit>(context).startPoint(point.id);
         },
         child: Container(
           width: point.size,

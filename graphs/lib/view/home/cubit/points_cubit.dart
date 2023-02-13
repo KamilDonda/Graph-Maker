@@ -15,17 +15,18 @@ class PointsCubit extends Cubit<List<Sprite>> {
     Point(name: "", x: 600, y: 500, color: Colors.blue),
   ];
 
-  void updatePoint(double dx, double dy, int index) {
-    var point = _sprites[index] as Point;
-    var sprite = _sprites[0];
+  Sprite _background() => _sprites[0];
+
+  void updatePoint(double dx, double dy, int id) {
+    var point = _sprites.firstWhere((s) => s.id == id) as Point;
 
     var x = point.x + dx;
     var y = point.y + dy;
 
-    if (-sprite.x + x + point.size > 1920) return;
-    if (-sprite.y + y + point.size > 1080) return;
-    if (-sprite.x + x < 0) return;
-    if (-sprite.y + y < 0) return;
+    if (-_background().x + x + point.size > 1920) return;
+    if (-_background().y + y + point.size > 1080) return;
+    if (-_background().x + x < 0) return;
+    if (-_background().y + y < 0) return;
 
     point.x = x;
     point.y = y;
@@ -34,8 +35,8 @@ class PointsCubit extends Cubit<List<Sprite>> {
   }
 
   void updateSprite(double dx, double dy) {
-    var x = _sprites[0].x + dx;
-    var y = _sprites[0].y + dy;
+    var x = _background().x + dx;
+    var y = _background().y + dy;
 
     if (x > 200) return;
     if (y > 150) return;
@@ -55,47 +56,53 @@ class PointsCubit extends Cubit<List<Sprite>> {
     emit([..._sprites]);
   }
 
-  void editPoint(Point point, int index) {
-    _sprites[index] = point;
+  void editPoint(int id, String name, double x, double y, Color color) {
+    int index = _sprites.indexOf(_sprites.firstWhere((e) => e.id == id));
+    (_sprites[index] as Point).name = name;
+    (_sprites[index] as Point).x = x;
+    (_sprites[index] as Point).y = y;
+    (_sprites[index] as Point).color = color;
+
     emit([..._sprites]);
   }
 
-  void deletePoint(int index) {
-    _focusedIndex = 0;
+  void deletePoint(int id) {
+    int index = _sprites.indexOf(_sprites.firstWhere((e) => e.id == id));
+    _focusedID = 0;
     _sprites.removeAt(index);
     emit([..._sprites]);
   }
 
   void clearAll() {
-    _focusedIndex = 0;
+    _focusedID = 0;
     if (_sprites.length > 1) _sprites.removeRange(1, _sprites.length);
     emit([..._sprites]);
   }
 
   void getPoints() => emit(_sprites);
 
-  int _focusedIndex = 0;
+  int _focusedID = 0;
 
-  int getFocusedIndex() => _focusedIndex;
+  int getFocusedID() => _focusedID;
 
-  void focusIndex(int index) {
-    _focusedIndex = index;
+  void focusSprite(int id) {
+    _focusedID = id;
     emit([..._sprites]);
   }
 
-  int _startIndex = 0;
+  int _startID = 0;
 
-  void startPoint(int index) {
-    if (_startIndex == 0) {
-      _startIndex = index;
+  void startPoint(int id) {
+    if (_startID == 0) {
+      _startID = id;
     } else {
-      endPoint(index);
+      endPoint(id);
     }
   }
 
-  void endPoint(int index) {
-    var p1 = _sprites[_startIndex] as Point;
-    var p2 = _sprites[index] as Point;
+  void endPoint(int id) {
+    var p1 = _sprites.firstWhere((e) => e.id == _startID) as Point;
+    var p2 = _sprites.firstWhere((e) => e.id == id) as Point;
 
     var x1 = p1.x + p1.size / 2;
     var y1 = p1.y + p1.size / 2;
@@ -115,7 +122,7 @@ class PointsCubit extends Cubit<List<Sprite>> {
 
     var line = Line(x1: x1, y1: y1, x2: x2, y2: y2);
     _sprites.add(line);
-    _startIndex = 0;
+    _startID = 0;
 
     emit([..._sprites]);
   }
