@@ -44,8 +44,15 @@ class PointsCubit extends Cubit<List<Sprite>> {
     if (y < -250) return;
 
     for (var i = 0; i < _sprites.length; i++) {
-      _sprites[i].x += dx;
-      _sprites[i].y += dy;
+      if (_sprites[i] is Line) {
+        (_sprites[i] as Line).x1 += dx;
+        (_sprites[i] as Line).x2 += dx;
+        (_sprites[i] as Line).y1 += dy;
+        (_sprites[i] as Line).y2 += dy;
+      } else {
+        _sprites[i].x += dx;
+        _sprites[i].y += dy;
+      }
     }
 
     emit([..._sprites]);
