@@ -121,7 +121,7 @@ class PointsCubit extends Cubit<List<Sprite>> {
     }
 
     var line = Line(x1: x1, y1: y1, x2: x2, y2: y2);
-    _sprites.add(line);
+    _sprites.insert(1, line);
     _startID = 0;
 
     emit([..._sprites]);
