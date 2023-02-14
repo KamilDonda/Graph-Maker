@@ -10,23 +10,48 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Home Page'),
-      ),
-      body: BlocProvider<PointsCubit>(
-        create: (_) => PointsCubit()..getPoints(),
-        child: Row(
-          children: const [
-            Expanded(child: GraphAreaWidget()),
-            VerticalDivider(
-              width: 1,
-              thickness: 1,
-              indent: 5,
-              endIndent: 5,
+      body: Row(
+        children: [
+          Expanded(
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 50,
+                  child: Row(
+                    children: [
+                      const SizedBox(width: 10),
+                      const Text(
+                        'Graph',
+                        style: TextStyle(fontSize: 30),
+                      ),
+                      const Spacer(),
+                      ElevatedButton.icon(
+                        onPressed: () {
+                          BlocProvider.of<PointsCubit>(context).clearAll();
+                        },
+                        icon: const Icon(Icons.clear),
+                        label: const Text("Clear all"),
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.red),
+                      ),
+                      const SizedBox(width: 10),
+                    ],
+                  ),
+                ),
+                const Divider(
+                  height: 1,
+                  thickness: 1,
+                ),
+                const Expanded(child: GraphAreaWidget()),
+              ],
             ),
-            FormWidget(),
-          ],
-        ),
+          ),
+          const VerticalDivider(
+            width: 1,
+            thickness: 1,
+          ),
+          const FormWidget(),
+        ],
       ),
     );
   }

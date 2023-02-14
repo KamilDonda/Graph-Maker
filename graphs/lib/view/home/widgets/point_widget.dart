@@ -9,8 +9,17 @@ class PointWidget extends SpriteWidget {
 
   final Point point;
 
-  void clickPoint(BuildContext context) {
-    BlocProvider.of<PointsCubit>(context).focusSprite(point.id);
+  void onLeftClick(BuildContext context) {
+    BlocProvider.of<PointsCubit>(context).focusSprite(id: point.id);
+  }
+
+  void onRightClick(BuildContext context) {
+    BlocProvider.of<PointsCubit>(context).addLine(point.id);
+  }
+
+  void onMove(BuildContext context, DragUpdateDetails position) {
+    BlocProvider.of<PointsCubit>(context)
+        .updatePoint(position.delta.dx, position.delta.dy, point.id);
   }
 
   @override
@@ -22,17 +31,20 @@ class PointWidget extends SpriteWidget {
       left: point.x,
       child: GestureDetector(
         onTapDown: (details) {
-          clickPoint(context);
+          if (BlocProvider.of<PointsCubit>(context).getFocusedID() ==
+              point.id) {
+            BlocProvider.of<PointsCubit>(context).rotateLoop(point);
+          }
+          onLeftClick(context);
         },
         onPanStart: (details) {
-          clickPoint(context);
+          onLeftClick(context);
         },
         onPanUpdate: (position) {
-          BlocProvider.of<PointsCubit>(context)
-              .updatePoint(position.delta.dx, position.delta.dy, point.id);
+          onMove(context, position);
         },
-        onLongPressStart: (details) {
-          BlocProvider.of<PointsCubit>(context).startPoint(point.id);
+        onSecondaryTap: () {
+          onRightClick(context);
         },
         child: Container(
           width: point.size,

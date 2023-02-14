@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:graphs/models/line.dart';
+import 'package:graphs/models/loop.dart';
 import 'package:graphs/models/point.dart';
 import 'package:graphs/models/sprite.dart';
 
@@ -35,6 +36,8 @@ class PointsCubit extends Cubit<List<Sprite>> {
   }
 
   void updateSprite(double dx, double dy) {
+    // We move background and all sprites, which position is relative
+    // to background
     var x = _background().x + dx;
     var y = _background().y + dy;
 
@@ -58,6 +61,8 @@ class PointsCubit extends Cubit<List<Sprite>> {
 
   void editPoint(int id, String name, double x, double y, Color color) {
     int index = _sprites.indexOf(_sprites.firstWhere((e) => e.id == id));
+    // Every creation of the new Point will increment the id, so we need to
+    // update point's values one by one instead of creating a new Point
     (_sprites[index] as Point).name = name;
     (_sprites[index] as Point).x = x;
     (_sprites[index] as Point).y = y;
@@ -69,7 +74,33 @@ class PointsCubit extends Cubit<List<Sprite>> {
   void deletePoint(int id) {
     int index = _sprites.indexOf(_sprites.firstWhere((e) => e.id == id));
     _focusedID = 0;
+
+    // Here we remove selected point:
     _sprites.removeAt(index);
+
+    // Then we remove all lines that are connected to this point, so
+    // we create a list of ids of that lines:
+    List<int> ids = [];
+    // First index is background, so we start from 1
+    for (int i = 1; i < _sprites.length; i++) {
+      var sprite = _sprites[i];
+      if (sprite is Line) {
+        if (sprite.p1.id == id || sprite.p2.id == id) {
+          ids.add(sprite.id);
+        }
+      } else if (sprite is Loop) {
+        if (sprite.point.id == id) {
+          ids.add(sprite.id);
+        }
+      } else if (sprite is Point) {
+        sprite.neighbors_ids.removeWhere((neighbourId) => neighbourId == id);
+      }
+    }
+    // Now we remove lines by their ids:
+    for (var id in ids) {
+      _sprites.removeWhere((e) => e.id == id);
+    }
+
     emit([..._sprites]);
   }
 
@@ -85,44 +116,52 @@ class PointsCubit extends Cubit<List<Sprite>> {
 
   int getFocusedID() => _focusedID;
 
-  void focusSprite(int id) {
+  void focusSprite({int id = 0}) {
     _focusedID = id;
     emit([..._sprites]);
   }
 
-  int _startID = 0;
+  void addLine(int id) {
+    var p1 = _sprites.firstWhere((e) => e.id == _focusedID) as Point;
 
-  void startPoint(int id) {
-    if (_startID == 0) {
-      _startID = id;
+    if (_focusedID == 0) {
+      print("No point selected");
+    } else if (id == _focusedID) {
+      print("Same point: $_focusedID");
+      p1.neighbors_ids.add(p1.id);
+      _sprites.insert(1, Loop(point: p1));
     } else {
-      endPoint(id);
+      var p2 = _sprites.firstWhere((e) => e.id == id) as Point;
+
+      p1.neighbors_ids.add(p2.id);
+      p2.neighbors_ids.add(p1.id);
+
+      var line = Line(p1: p1, p2: p2);
+      _sprites.insert(1, line);
     }
+
+    _focusedID = id;
+    emit([..._sprites]);
   }
 
-  void endPoint(int id) {
-    var p1 = _sprites.firstWhere((e) => e.id == _startID) as Point;
-    var p2 = _sprites.firstWhere((e) => e.id == id) as Point;
-
-    var x1 = p1.x + p1.size / 2;
-    var y1 = p1.y + p1.size / 2;
-
-    var x2 = p2.x + p2.size / 2;
-    var y2 = p2.y + p2.size / 2;
-
-    if (x2 < x1) {
-      var xt = x1;
-      x1 = x2;
-      x2 = xt;
-
-      var yt = y1;
-      y1 = y2;
-      y2 = yt;
+  void rotateLoop(Point point) {
+    for (var sprite in _sprites) {
+      if (sprite is Loop) {
+        if (sprite.point.id == point.id) {
+          sprite.click();
+        }
+      }
     }
 
-    var line = Line(x1: x1, y1: y1, x2: x2, y2: y2);
-    _sprites.add(line);
-    _startID = 0;
+    emit([..._sprites]);
+  }
+
+  void removeLine(Line line) {
+    var p1 = line.p1;
+    var p2 = line.p2;
+    _sprites.remove(line);
+    p1.neighbors_ids.remove(p2.id);
+    p2.neighbors_ids.remove(p1.id);
 
     emit([..._sprites]);
   }

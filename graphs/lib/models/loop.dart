@@ -2,16 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:graphs/models/point.dart';
 import 'package:graphs/models/sprite.dart';
 
-class Line extends Sprite {
-  late Point p1;
-  late Point p2;
+class Loop extends Sprite {
+  late Point point;
   late Color color;
   late double width;
+  late int counter = 0;
 
-  Line({
-    required this.p1,
-    required this.p2,
+  Loop({
+    required this.point,
     this.color = Colors.black,
     this.width = 2,
   }) : super(x: 0.0, y: 0.0);
+
+  void click() {
+    counter++;
+    if (counter == 4) counter = 0;
+  }
 }
