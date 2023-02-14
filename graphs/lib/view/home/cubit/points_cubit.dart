@@ -44,15 +44,8 @@ class PointsCubit extends Cubit<List<Sprite>> {
     if (y < -250) return;
 
     for (var i = 0; i < _sprites.length; i++) {
-      if (_sprites[i] is Line) {
-        (_sprites[i] as Line).x1 += dx;
-        (_sprites[i] as Line).x2 += dx;
-        (_sprites[i] as Line).y1 += dy;
-        (_sprites[i] as Line).y2 += dy;
-      } else {
-        _sprites[i].x += dx;
-        _sprites[i].y += dy;
-      }
+      _sprites[i].x += dx;
+      _sprites[i].y += dy;
     }
 
     emit([..._sprites]);
@@ -111,23 +104,25 @@ class PointsCubit extends Cubit<List<Sprite>> {
     var p1 = _sprites.firstWhere((e) => e.id == _startID) as Point;
     var p2 = _sprites.firstWhere((e) => e.id == id) as Point;
 
-    var x1 = p1.x + p1.size / 2;
-    var y1 = p1.y + p1.size / 2;
+    // p1.x = p1.x + p1.size / 2;
+    // p1.y = p1.y + p1.size / 2;
 
-    var x2 = p2.x + p2.size / 2;
-    var y2 = p2.y + p2.size / 2;
+    // p2.x = p2.x + p2.size / 2;
+    // p2.y = p2.y + p2.size / 2;
 
-    if (x2 < x1) {
-      var xt = x1;
-      x1 = x2;
-      x2 = xt;
+    // if (p2.x < p1.x) {
+    //   var xt = p1.x;
+    //   p1.x = p2.x;
+    //   p2.x = xt;
+    //
+    //   var yt = p1.y;
+    //   p1.y = p2.y;
+    //   p2.y = yt;
+    // }
 
-      var yt = y1;
-      y1 = y2;
-      y2 = yt;
-    }
+    print("p1: ${p1.x}, ${p1.y} p2: ${p2.x}, ${p2.y}");
 
-    var line = Line(x1: x1, y1: y1, x2: x2, y2: y2);
+    var line = Line(p1: p1, p2: p2);
     _sprites.insert(1, line);
     _startID = 0;
 
