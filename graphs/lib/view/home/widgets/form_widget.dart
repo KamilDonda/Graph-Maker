@@ -269,8 +269,9 @@ class _FormWidgetState extends State<FormWidget> {
                         ),
                         if (isHinterOpen)
                           const BulletList([
-                            "To select point, tap on it by Left Mouse Button",
-                            "To connect points, first select point, then tap on another point by Right Mouse Button",
+                            "To select point, click it by Left Mouse Button",
+                            "To connect points, first select point, then click on another point by Right Mouse Button",
+                            "To delete connection, click it by Right Mouse Button",
                           ]),
                       ],
                     )),
