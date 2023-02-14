@@ -87,11 +87,8 @@ class PointsCubit extends Cubit<List<Sprite>> {
         if (sprite.p1.id == id || sprite.p2.id == id) {
           ids.add(sprite.id);
         }
-      } else {
-        break;
-        // Lines are inserted at 1 index, so all lines are before points,
-        // so if current sprite is not a line, then we can break the loop,
-        // because it was the last line
+      } else if (sprite is Point) {
+        sprite.neighbors_ids.removeWhere((neighbourId) => neighbourId == id);
       }
     }
     // Now we remove lines by their ids:
@@ -120,13 +117,18 @@ class PointsCubit extends Cubit<List<Sprite>> {
   }
 
   void addLine(int id) {
+    var p1 = _sprites.firstWhere((e) => e.id == _focusedID) as Point;
+
     if (_focusedID == 0) {
       print("No point selected");
     } else if (id == _focusedID) {
       print("Same point: $_focusedID");
+      p1.neighbors_ids.add(p1.id);
     } else {
-      var p1 = _sprites.firstWhere((e) => e.id == _focusedID) as Point;
       var p2 = _sprites.firstWhere((e) => e.id == id) as Point;
+
+      p1.neighbors_ids.add(p2.id);
+      p2.neighbors_ids.add(p1.id);
 
       var line = Line(p1: p1, p2: p2);
       _sprites.insert(1, line);

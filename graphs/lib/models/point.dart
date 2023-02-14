@@ -8,6 +8,7 @@ class Point extends Sprite {
   late double y;
   late Color color;
   late double size;
+  late List<int> neighbors_ids = <int>[];
 
   Point({
     required this.name,
