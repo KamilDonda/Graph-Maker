@@ -35,6 +35,8 @@ class PointsCubit extends Cubit<List<Sprite>> {
   }
 
   void updateSprite(double dx, double dy) {
+    // We move background and all sprites, which position is relative
+    // to background
     var x = _background().x + dx;
     var y = _background().y + dy;
 
@@ -58,6 +60,8 @@ class PointsCubit extends Cubit<List<Sprite>> {
 
   void editPoint(int id, String name, double x, double y, Color color) {
     int index = _sprites.indexOf(_sprites.firstWhere((e) => e.id == id));
+    // Every creation of the new Point will increment the id, so we need to
+    // update point's values one by one instead of creating a new Point
     (_sprites[index] as Point).name = name;
     (_sprites[index] as Point).x = x;
     (_sprites[index] as Point).y = y;
@@ -69,7 +73,32 @@ class PointsCubit extends Cubit<List<Sprite>> {
   void deletePoint(int id) {
     int index = _sprites.indexOf(_sprites.firstWhere((e) => e.id == id));
     _focusedID = 0;
+
+    // Here we remove selected point:
     _sprites.removeAt(index);
+
+    // Then we remove all lines that are connected to this point, so
+    // we create a list of ids of that lines:
+    List<int> ids = [];
+    // First index is background, so we start from 1
+    for (int i = 1; i < _sprites.length; i++) {
+      var sprite = _sprites[i];
+      if (sprite is Line) {
+        if (sprite.p1.id == id || sprite.p2.id == id) {
+          ids.add(sprite.id);
+        }
+      } else {
+        break;
+        // Lines are inserted at 1 index, so all lines are before points,
+        // so if current sprite is not a line, then we can break the loop,
+        // because it was the last line
+      }
+    }
+    // Now we remove lines by their ids:
+    for (var id in ids) {
+      _sprites.removeWhere((e) => e.id == id);
+    }
+
     emit([..._sprites]);
   }
 
