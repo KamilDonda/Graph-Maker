@@ -155,4 +155,14 @@ class PointsCubit extends Cubit<List<Sprite>> {
 
     emit([..._sprites]);
   }
+
+  void removeLine(Line line) {
+    var p1 = line.p1;
+    var p2 = line.p2;
+    _sprites.remove(line);
+    p1.neighbors_ids.remove(p2.id);
+    p2.neighbors_ids.remove(p1.id);
+
+    emit([..._sprites]);
+  }
 }

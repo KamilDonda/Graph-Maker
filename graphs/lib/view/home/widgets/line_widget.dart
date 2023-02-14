@@ -1,7 +1,10 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:graphs/constants/sizes.dart';
 import 'package:graphs/models/line.dart';
+import 'package:graphs/view/home/cubit/points_cubit.dart';
 import 'package:graphs/view/home/widgets/sprite_widget.dart';
 
 class LineWidget extends SpriteWidget {
@@ -31,18 +34,43 @@ class LineWidget extends SpriteWidget {
     var tan = a / b;
     var degrees = math.atan(tan);
 
-    return Positioned(
-      top: y1,
-      left: x1,
-      child: Transform.rotate(
-        angle: degrees,
-        alignment: Alignment.topLeft,
-        child: Container(
-          width: math.sqrt(b * b + a * a),
-          height: line.width,
-          color: line.color,
+    return Stack(
+      children: [
+        Positioned(
+          top: y1,
+          left: x1,
+          child: Transform.rotate(
+            angle: degrees,
+            alignment: Alignment.topLeft,
+            child: Container(
+              width: math.sqrt(b * b + a * a),
+              height: line.width,
+              color: line.color,
+            ),
+          ),
         ),
-      ),
+        Positioned(
+          top: y1 + (a - DEFAULT_LINE_POINT_SIZE) / 2,
+          left: x1 + (b - DEFAULT_LINE_POINT_SIZE) / 2,
+          child: GestureDetector(
+            onSecondaryTap: () {
+              BlocProvider.of<PointsCubit>(context).removeLine(line);
+            },
+            child: Container(
+              width: DEFAULT_LINE_POINT_SIZE,
+              height: DEFAULT_LINE_POINT_SIZE,
+              decoration: BoxDecoration(
+                color: Colors.grey,
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: Colors.black,
+                  width: 1,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
