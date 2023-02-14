@@ -15,6 +15,7 @@ class GraphAreaWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      padding: const EdgeInsets.all(2),
       color: const Color(0xfff1f1f1),
       child: BlocBuilder<PointsCubit, List<Sprite>>(
         builder: (_, sprites) {
