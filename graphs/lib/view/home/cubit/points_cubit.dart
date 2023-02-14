@@ -143,4 +143,16 @@ class PointsCubit extends Cubit<List<Sprite>> {
     _focusedID = id;
     emit([..._sprites]);
   }
+
+  void rotateLoop(Point point) {
+    for (var sprite in _sprites) {
+      if (sprite is Loop) {
+        if (sprite.point.id == point.id) {
+          sprite.click();
+        }
+      }
+    }
+
+    emit([..._sprites]);
+  }
 }

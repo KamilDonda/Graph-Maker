@@ -31,6 +31,10 @@ class PointWidget extends SpriteWidget {
       left: point.x,
       child: GestureDetector(
         onTapDown: (details) {
+          if (BlocProvider.of<PointsCubit>(context).getFocusedID() ==
+              point.id) {
+            BlocProvider.of<PointsCubit>(context).rotateLoop(point);
+          }
           onLeftClick(context);
         },
         onPanStart: (details) {
