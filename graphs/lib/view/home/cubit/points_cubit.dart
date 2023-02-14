@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:graphs/models/line.dart';
+import 'package:graphs/models/loop.dart';
 import 'package:graphs/models/point.dart';
 import 'package:graphs/models/sprite.dart';
 
@@ -87,6 +88,10 @@ class PointsCubit extends Cubit<List<Sprite>> {
         if (sprite.p1.id == id || sprite.p2.id == id) {
           ids.add(sprite.id);
         }
+      } else if (sprite is Loop) {
+        if (sprite.point.id == id) {
+          ids.add(sprite.id);
+        }
       } else if (sprite is Point) {
         sprite.neighbors_ids.removeWhere((neighbourId) => neighbourId == id);
       }
@@ -124,6 +129,7 @@ class PointsCubit extends Cubit<List<Sprite>> {
     } else if (id == _focusedID) {
       print("Same point: $_focusedID");
       p1.neighbors_ids.add(p1.id);
+      _sprites.insert(1, Loop(point: p1));
     } else {
       var p2 = _sprites.firstWhere((e) => e.id == id) as Point;
 
