@@ -114,47 +114,25 @@ class PointsCubit extends Cubit<List<Sprite>> {
 
   int getFocusedID() => _focusedID;
 
-  void focusSprite(int id) {
+  void focusSprite({int id = 0}) {
     _focusedID = id;
     emit([..._sprites]);
   }
 
-  int _startID = 0;
-
-  void startPoint(int id) {
-    if (_startID == 0) {
-      _startID = id;
+  void addLine(int id) {
+    if (_focusedID == 0) {
+      print("No point selected");
+    } else if (id == _focusedID) {
+      print("Same point: $_focusedID");
     } else {
-      endPoint(id);
+      var p1 = _sprites.firstWhere((e) => e.id == _focusedID) as Point;
+      var p2 = _sprites.firstWhere((e) => e.id == id) as Point;
+
+      var line = Line(p1: p1, p2: p2);
+      _sprites.insert(1, line);
     }
-  }
 
-  void endPoint(int id) {
-    var p1 = _sprites.firstWhere((e) => e.id == _startID) as Point;
-    var p2 = _sprites.firstWhere((e) => e.id == id) as Point;
-
-    // p1.x = p1.x + p1.size / 2;
-    // p1.y = p1.y + p1.size / 2;
-
-    // p2.x = p2.x + p2.size / 2;
-    // p2.y = p2.y + p2.size / 2;
-
-    // if (p2.x < p1.x) {
-    //   var xt = p1.x;
-    //   p1.x = p2.x;
-    //   p2.x = xt;
-    //
-    //   var yt = p1.y;
-    //   p1.y = p2.y;
-    //   p2.y = yt;
-    // }
-
-    print("p1: ${p1.x}, ${p1.y} p2: ${p2.x}, ${p2.y}");
-
-    var line = Line(p1: p1, p2: p2);
-    _sprites.insert(1, line);
-    _startID = 0;
-
+    _focusedID = id;
     emit([..._sprites]);
   }
 }
