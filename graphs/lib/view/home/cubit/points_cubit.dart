@@ -172,4 +172,11 @@ class PointsCubit extends Cubit<List<Sprite>> {
 
     emit([..._sprites]);
   }
+
+  bool _bulletsVisibility = true;
+  bool areBulletsVisible() => _bulletsVisibility;
+  void toggleBulletsVisibility() {
+    _bulletsVisibility = !_bulletsVisibility;
+    emit([..._sprites]);
+  }
 }

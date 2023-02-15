@@ -37,6 +37,7 @@ class LineWidget extends SpriteWidget {
     var tan = a / b;
     var degrees = math.atan(tan);
     var background = BlocProvider.of<PointsCubit>(context).background;
+    var areVisible = BlocProvider.of<PointsCubit>(context).areBulletsVisible();
     return Stack(
       children: [
         Positioned(
@@ -52,22 +53,23 @@ class LineWidget extends SpriteWidget {
             ),
           ),
         ),
-        Positioned(
-          top: background.y + y1 + (a - DEFAULT_LINE_POINT_SIZE) / 2,
-          left: background.x + x1 + (b - DEFAULT_LINE_POINT_SIZE) / 2,
-          child: GestureDetector(
-              onSecondaryTap: () {
-                BlocProvider.of<PointsCubit>(context).removeLine(line);
-              },
-              child: CircleAvatar(
-                radius: bulletSize,
-                backgroundColor: Colors.black,
+        if (areVisible)
+          Positioned(
+            top: background.y + y1 + (a - DEFAULT_LINE_POINT_SIZE) / 2,
+            left: background.x + x1 + (b - DEFAULT_LINE_POINT_SIZE) / 2,
+            child: GestureDetector(
+                onSecondaryTap: () {
+                  BlocProvider.of<PointsCubit>(context).removeLine(line);
+                },
                 child: CircleAvatar(
-                  radius: innerBulletSize,
-                  backgroundColor: Colors.grey,
-                ),
-              )),
-        ),
+                  radius: bulletSize,
+                  backgroundColor: Colors.black,
+                  child: CircleAvatar(
+                    radius: innerBulletSize,
+                    backgroundColor: Colors.grey,
+                  ),
+                )),
+          ),
       ],
     );
   }
