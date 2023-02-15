@@ -31,11 +31,16 @@ class GraphAreaWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTapDown: (details) {
+      onTap: () {
+        click(context);
+      },
+      onSecondaryTap: () {
+        click(context);
+      },
+      onTertiaryTapDown: (details) {
         click(context);
       },
       onPanUpdate: (position) {
-        click(context);
         BlocProvider.of<PointsCubit>(context)
             .updateSprite(position.delta.dx.toInt(), position.delta.dy.toInt());
       },
