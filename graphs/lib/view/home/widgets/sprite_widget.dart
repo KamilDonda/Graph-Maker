@@ -16,16 +16,16 @@ class SpriteWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Positioned(
-      top: sprite.y,
-      left: sprite.x,
+      top: sprite.y.toDouble(),
+      left: sprite.x.toDouble(),
       child: GestureDetector(
         onTapDown: (details) {
           click(context);
         },
         onPanUpdate: (position) {
           click(context);
-          BlocProvider.of<PointsCubit>(context)
-              .updateSprite(position.delta.dx, position.delta.dy);
+          BlocProvider.of<PointsCubit>(context).updateSprite(
+              position.delta.dx.toInt(), position.delta.dy.toInt());
         },
         child: Container(
           width: AREA_SIZE_X,

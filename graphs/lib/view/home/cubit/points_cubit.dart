@@ -18,7 +18,7 @@ class PointsCubit extends Cubit<List<Sprite>> {
 
   Sprite _background() => _sprites[0];
 
-  void updatePoint(double dx, double dy, int id) {
+  void updatePoint(int dx, int dy, int id) {
     var point = _sprites.firstWhere((s) => s.id == id) as Point;
 
     var x = point.x + dx;
@@ -35,16 +35,16 @@ class PointsCubit extends Cubit<List<Sprite>> {
     emit([..._sprites]);
   }
 
-  void updateSprite(double dx, double dy) {
+  void updateSprite(int dx, int dy) {
     // We move background and all sprites, which position is relative
     // to background
     var x = _background().x + dx;
     var y = _background().y + dy;
 
-    if (x > 200) return;
-    if (y > 150) return;
-    if (x < -300) return;
-    if (y < -250) return;
+    // if (x > 200) return;
+    // if (y > 150) return;
+    // if (x < -300) return;
+    // if (y < -250) return;
 
     for (var i = 0; i < _sprites.length; i++) {
       _sprites[i].x += dx;
@@ -59,7 +59,7 @@ class PointsCubit extends Cubit<List<Sprite>> {
     emit([..._sprites]);
   }
 
-  void editPoint(int id, String name, double x, double y, Color color) {
+  void editPoint(int id, String name, int x, int y, Color color) {
     int index = _sprites.indexOf(_sprites.firstWhere((e) => e.id == id));
     // Every creation of the new Point will increment the id, so we need to
     // update point's values one by one instead of creating a new Point

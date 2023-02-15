@@ -64,9 +64,9 @@ class _FormWidgetState extends State<FormWidget> {
     );
   }
 
-  double _parseString(String value) {
+  int _parseString(String value) {
     try {
-      return double.parse(value);
+      return int.parse(value);
     } on Exception {
       return 200;
     }

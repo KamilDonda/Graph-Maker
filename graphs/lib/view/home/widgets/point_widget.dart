@@ -18,8 +18,8 @@ class PointWidget extends SpriteWidget {
   }
 
   void onMove(BuildContext context, DragUpdateDetails position) {
-    BlocProvider.of<PointsCubit>(context)
-        .updatePoint(position.delta.dx, position.delta.dy, point.id);
+    BlocProvider.of<PointsCubit>(context).updatePoint(
+        position.delta.dx.toInt(), position.delta.dy.toInt(), point.id);
   }
 
   @override
@@ -27,8 +27,8 @@ class PointWidget extends SpriteWidget {
     bool isFocused =
         BlocProvider.of<PointsCubit>(context).getFocusedID() == point.id;
     return Positioned(
-      top: point.y,
-      left: point.x,
+      top: point.y.toDouble(),
+      left: point.x.toDouble(),
       child: GestureDetector(
         onTapDown: (details) {
           if (BlocProvider.of<PointsCubit>(context).getFocusedID() ==
