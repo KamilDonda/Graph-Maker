@@ -47,23 +47,25 @@ class PointWidget extends SpriteWidget {
         onSecondaryTap: () {
           onRightClick(context);
         },
-        child: Container(
-          width: point.size,
-          height: point.size,
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            color: point.color,
-            shape: BoxShape.circle,
-            border: Border.all(
-              color: isFocused ? Colors.black : const Color(0xFF282828),
-              width: isFocused ? 5 : 3,
+        child: Material(
+          elevation: 4,
+          shape: const CircleBorder(),
+          child: CircleAvatar(
+            radius: point.size / 2,
+            backgroundColor: isFocused ? Colors.black : const Color(0xFF282828),
+            child: CircleAvatar(
+              radius: isFocused ? point.size / 2 - 6 : point.size / 2 - 3,
+              backgroundColor:
+                  isFocused ? point.color.withAlpha(220) : point.color,
+              child: Text(
+                point.name,
+                style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 35,
+                    fontWeight:
+                        isFocused ? FontWeight.bold : FontWeight.normal),
+              ),
             ),
-          ),
-          child: Text(
-            point.name,
-            style: TextStyle(
-                fontSize: 35,
-                fontWeight: isFocused ? FontWeight.bold : FontWeight.normal),
           ),
         ),
       ),

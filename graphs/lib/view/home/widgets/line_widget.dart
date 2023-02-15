@@ -12,6 +12,9 @@ class LineWidget extends SpriteWidget {
 
   final Line line;
 
+  final bulletSize = DEFAULT_LINE_POINT_SIZE / 2;
+  final innerBulletSize = DEFAULT_LINE_POINT_SIZE / 2 - 2;
+
   @override
   Widget build(BuildContext context) {
     var x1 = line.p1.x + line.p1.size / 2;
@@ -53,22 +56,17 @@ class LineWidget extends SpriteWidget {
           top: background.y + y1 + (a - DEFAULT_LINE_POINT_SIZE) / 2,
           left: background.x + x1 + (b - DEFAULT_LINE_POINT_SIZE) / 2,
           child: GestureDetector(
-            onSecondaryTap: () {
-              BlocProvider.of<PointsCubit>(context).removeLine(line);
-            },
-            child: Container(
-              width: DEFAULT_LINE_POINT_SIZE,
-              height: DEFAULT_LINE_POINT_SIZE,
-              decoration: BoxDecoration(
-                color: Colors.grey,
-                shape: BoxShape.circle,
-                border: Border.all(
-                  color: Colors.black,
-                  width: 1,
+              onSecondaryTap: () {
+                BlocProvider.of<PointsCubit>(context).removeLine(line);
+              },
+              child: CircleAvatar(
+                radius: bulletSize,
+                backgroundColor: Colors.black,
+                child: CircleAvatar(
+                  radius: innerBulletSize,
+                  backgroundColor: Colors.grey,
                 ),
-              ),
-            ),
-          ),
+              )),
         ),
       ],
     );
