@@ -13,5 +13,5 @@ class Line extends Sprite {
     required this.p2,
     this.color = Colors.black,
     this.width = 2,
-  }) : super(x: 0.0, y: 0.0);
+  }) : super(x: 0, y: 0);
 }

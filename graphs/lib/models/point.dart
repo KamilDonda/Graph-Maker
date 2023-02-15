@@ -4,8 +4,8 @@ import 'package:graphs/models/sprite.dart';
 
 class Point extends Sprite {
   late String name;
-  late double x;
-  late double y;
+  late int x;
+  late int y;
   late Color color;
   late double size;
   late List<int> neighbors_ids = <int>[];

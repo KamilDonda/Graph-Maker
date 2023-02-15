@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:graphs/models/loop.dart';
+import 'package:graphs/view/home/cubit/points_cubit.dart';
 import 'package:graphs/view/home/widgets/sprite_widget.dart';
 
 class LoopWidget extends SpriteWidget {
-  const LoopWidget({super.key, required this.loop}) : super(sprite: loop);
+  const LoopWidget({super.key, required this.loop}) : super();
 
   final Loop loop;
 
@@ -30,21 +32,21 @@ class LoopWidget extends SpriteWidget {
     );
   }
 
-  double leftPosition(double displacement) {
+  int leftPosition(int displacement) {
     switch (loop.counter) {
       case 0:
         return loop.point.x - displacement;
       case 1:
         return loop.point.x;
       case 2:
-        return loop.point.x + displacement / 2;
+        return loop.point.x + displacement ~/ 2;
       case 3:
         return loop.point.x - displacement;
     }
     return 0;
   }
 
-  double topPosition(double displacement) {
+  int topPosition(int displacement) {
     switch (loop.counter) {
       case 0:
         return loop.point.y - displacement;
@@ -60,12 +62,13 @@ class LoopWidget extends SpriteWidget {
 
   @override
   Widget build(BuildContext context) {
-    final displacement = loop.point.size * 0.75;
+    final displacement = (loop.point.size * 0.75).toInt();
     final size = loop.point.size * 1.5;
     final radius = loop.point.size * 1.25;
+    var background = BlocProvider.of<PointsCubit>(context).background;
     return Positioned(
-      top: topPosition(displacement),
-      left: leftPosition(displacement),
+      top: background.y + topPosition(displacement).toDouble(),
+      left: background.x + leftPosition(displacement).toDouble(),
       child: Container(
         width: size,
         height: size,
