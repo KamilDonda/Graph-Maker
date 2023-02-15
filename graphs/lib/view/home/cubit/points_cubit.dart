@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:graphs/constants/sizes.dart';
@@ -125,10 +126,14 @@ class PointsCubit extends Cubit<List<Sprite>> {
 
   void addLine(int id) {
     if (_focusedID == UNFOCUSED) {
-      print("No point selected");
+      if (kDebugMode) {
+        print("No point selected");
+      }
     } else if (id == _focusedID) {
       var p1 = _sprites.firstWhere((e) => e.id == _focusedID) as Point;
-      print("Same point: $_focusedID");
+      if (kDebugMode) {
+        print("Same point: $_focusedID");
+      }
       p1.neighbors_ids.add(p1.id);
       _sprites.insert(0, Loop(point: p1));
     } else {
