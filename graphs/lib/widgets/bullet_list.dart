@@ -11,9 +11,9 @@ class BulletList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: 300,
       alignment: Alignment.centerLeft,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: ListView(
         children: strings.map((str) {
           return Container(
             padding: const EdgeInsets.only(bottom: 5),
