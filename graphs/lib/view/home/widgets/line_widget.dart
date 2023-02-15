@@ -4,12 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:graphs/constants/sizes.dart';
 import 'package:graphs/models/line.dart';
-import 'package:graphs/models/sprite.dart';
 import 'package:graphs/view/home/cubit/points_cubit.dart';
 import 'package:graphs/view/home/widgets/sprite_widget.dart';
 
 class LineWidget extends SpriteWidget {
-  const LineWidget({super.key, required this.line}) : super(sprite: line);
+  const LineWidget({super.key, required this.line}) : super();
 
   final Line line;
 
@@ -34,7 +33,7 @@ class LineWidget extends SpriteWidget {
     var b = x2 - x1;
     var tan = a / b;
     var degrees = math.atan(tan);
-    Sprite background = BlocProvider.of<PointsCubit>(context).getBackground();
+    var background = BlocProvider.of<PointsCubit>(context).background;
     return Stack(
       children: [
         Positioned(

@@ -6,20 +6,20 @@ import 'package:graphs/constants/sizes.dart';
 import 'package:graphs/models/line.dart';
 import 'package:graphs/models/loop.dart';
 import 'package:graphs/models/point.dart';
+import 'package:graphs/models/position.dart';
 import 'package:graphs/models/sprite.dart';
 
 class PointsCubit extends Cubit<List<Sprite>> {
   PointsCubit() : super([]);
 
+  Position background = Position();
+
   final List<Sprite> _sprites = [
-    Sprite(x: 0, y: 0),
     Point(name: "", x: 600, y: 100, color: Colors.blue),
     Point(name: "", x: 300, y: 300, color: Colors.blue),
     Point(name: "", x: 600, y: 300, color: Colors.blue),
     Point(name: "", x: 600, y: 500, color: Colors.blue),
   ];
-
-  Sprite getBackground() => _sprites[0];
 
   void updatePoint(int dx, int dy, int id) {
     var point = _sprites.firstWhere((s) => s.id == id) as Point;
@@ -27,8 +27,8 @@ class PointsCubit extends Cubit<List<Sprite>> {
     var x = point.x + dx;
     var y = point.y + dy;
 
-    if (x + point.size > 1920) return;
-    if (y + point.size > 1080) return;
+    if (x + point.size > AREA_SIZE_X) return;
+    if (y + point.size > AREA_SIZE_Y) return;
     if (x < 0) return;
     if (y < 0) return;
 
@@ -39,21 +39,20 @@ class PointsCubit extends Cubit<List<Sprite>> {
   }
 
   void updateSprite(int dx, int dy) {
-    var x = getBackground().x + dx;
-    var y = getBackground().y + dy;
+    var x = background.x + dx;
+    var y = background.y + dy;
 
     var pixelRatio = window.devicePixelRatio;
     var logicalScreenSize = window.physicalSize / pixelRatio;
     var logicalWidth = logicalScreenSize.width;
     var logicalHeight = logicalScreenSize.height;
 
-    if (x > 50) return;
-    if (y > 50) return;
-    if (x + AREA_SIZE_X + 50 + FORM_MAX_WIDTH < logicalWidth) return;
-    if (y + AREA_SIZE_Y + 50 + TOP_BAR_HEIGHT < logicalHeight) return;
+    if (x > 10) return;
+    if (y > 10) return;
+    if (x + AREA_SIZE_X + 10 + FORM_MAX_WIDTH < logicalWidth) return;
+    if (y + AREA_SIZE_Y + 10 + TOP_BAR_HEIGHT < logicalHeight) return;
 
-    getBackground().x += dx;
-    getBackground().y += dy;
+    background.move(dx: dx, dy: dy);
 
     emit([..._sprites]);
   }
@@ -77,7 +76,7 @@ class PointsCubit extends Cubit<List<Sprite>> {
 
   void deletePoint(int id) {
     int index = _sprites.indexOf(_sprites.firstWhere((e) => e.id == id));
-    _focusedID = 0;
+    _focusedID = UNFOCUSED;
 
     // Here we remove selected point:
     _sprites.removeAt(index);
@@ -85,8 +84,7 @@ class PointsCubit extends Cubit<List<Sprite>> {
     // Then we remove all lines that are connected to this point, so
     // we create a list of ids of that lines:
     List<int> ids = [];
-    // First index is background, so we start from 1
-    for (int i = 1; i < _sprites.length; i++) {
+    for (int i = 0; i < _sprites.length; i++) {
       var sprite = _sprites[i];
       if (sprite is Line) {
         if (sprite.p1.id == id || sprite.p2.id == id) {
@@ -109,39 +107,39 @@ class PointsCubit extends Cubit<List<Sprite>> {
   }
 
   void clearAll() {
-    _focusedID = 0;
-    if (_sprites.length > 1) _sprites.removeRange(1, _sprites.length);
+    _focusedID = UNFOCUSED;
+    _sprites.clear();
     emit([..._sprites]);
   }
 
   void getPoints() => emit(_sprites);
 
-  int _focusedID = 0;
+  int _focusedID = UNFOCUSED;
 
   int getFocusedID() => _focusedID;
 
-  void focusSprite({int id = 0}) {
+  void focusSprite({int id = UNFOCUSED}) {
     _focusedID = id;
     emit([..._sprites]);
   }
 
   void addLine(int id) {
-    var p1 = _sprites.firstWhere((e) => e.id == _focusedID) as Point;
-
-    if (_focusedID == 0) {
+    if (_focusedID == UNFOCUSED) {
       print("No point selected");
     } else if (id == _focusedID) {
+      var p1 = _sprites.firstWhere((e) => e.id == _focusedID) as Point;
       print("Same point: $_focusedID");
       p1.neighbors_ids.add(p1.id);
-      _sprites.insert(1, Loop(point: p1));
+      _sprites.insert(0, Loop(point: p1));
     } else {
+      var p1 = _sprites.firstWhere((e) => e.id == _focusedID) as Point;
       var p2 = _sprites.firstWhere((e) => e.id == id) as Point;
 
       p1.neighbors_ids.add(p2.id);
       p2.neighbors_ids.add(p1.id);
 
       var line = Line(p1: p1, p2: p2);
-      _sprites.insert(1, line);
+      _sprites.insert(0, line);
     }
 
     _focusedID = id;

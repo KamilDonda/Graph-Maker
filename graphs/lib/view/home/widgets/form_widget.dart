@@ -78,7 +78,7 @@ class _FormWidgetState extends State<FormWidget> {
       width: isFormOpen ? FORM_MAX_WIDTH : FORM_MIN_WIDTH,
       child: BlocBuilder<PointsCubit, List<Sprite>>(builder: (_, points) {
         var id = BlocProvider.of<PointsCubit>(context).getFocusedID();
-        if (id != 0) {
+        if (id != UNFOCUSED) {
           if (!wasEdited) {
             var point = points.firstWhere((e) => e.id == id) as Point;
             nameController.text = point.name.toString();
@@ -154,7 +154,7 @@ class _FormWidgetState extends State<FormWidget> {
                           ? const Text("Select color",
                               style: TextStyle(fontSize: 25))
                           : const SizedBox(),
-                      id > 0 || isFormOpen
+                      id != UNFOCUSED || isFormOpen
                           ? GestureDetector(
                               onTap: _openMainColorPicker,
                               child: CircleColor(
@@ -189,7 +189,7 @@ class _FormWidgetState extends State<FormWidget> {
                       ),
                     ),
                   const SizedBox(height: 10),
-                  if (id > 0 && isFormOpen)
+                  if (id != UNFOCUSED && isFormOpen)
                     FloatingActionButton.extended(
                       onPressed: () {
                         BlocProvider.of<PointsCubit>(context).editPoint(
@@ -215,7 +215,7 @@ class _FormWidgetState extends State<FormWidget> {
                       ),
                     ),
                   const SizedBox(height: 10),
-                  if (id > 0 && isFormOpen)
+                  if (id != UNFOCUSED && isFormOpen)
                     FloatingActionButton.extended(
                       onPressed: () {
                         BlocProvider.of<PointsCubit>(context).deletePoint(id);

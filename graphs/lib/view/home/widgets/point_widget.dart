@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:graphs/models/point.dart';
-import 'package:graphs/models/sprite.dart';
 import 'package:graphs/view/home/cubit/points_cubit.dart';
 import 'package:graphs/view/home/widgets/sprite_widget.dart';
 
 class PointWidget extends SpriteWidget {
-  const PointWidget({super.key, required this.point}) : super(sprite: point);
+  const PointWidget({super.key, required this.point}) : super();
 
   final Point point;
 
@@ -27,7 +26,7 @@ class PointWidget extends SpriteWidget {
   Widget build(BuildContext context) {
     bool isFocused =
         BlocProvider.of<PointsCubit>(context).getFocusedID() == point.id;
-    Sprite background = BlocProvider.of<PointsCubit>(context).getBackground();
+    var background = BlocProvider.of<PointsCubit>(context).background;
     return Positioned(
       top: background.y + point.y.toDouble(),
       left: background.x + point.x.toDouble(),
