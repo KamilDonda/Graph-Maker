@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:graphs/models/loop.dart';
+import 'package:graphs/models/sprite.dart';
+import 'package:graphs/view/home/cubit/points_cubit.dart';
 import 'package:graphs/view/home/widgets/sprite_widget.dart';
 
 class LoopWidget extends SpriteWidget {
@@ -63,9 +66,10 @@ class LoopWidget extends SpriteWidget {
     final displacement = (loop.point.size * 0.75).toInt();
     final size = loop.point.size * 1.5;
     final radius = loop.point.size * 1.25;
+    Sprite background = BlocProvider.of<PointsCubit>(context).getBackground();
     return Positioned(
-      top: topPosition(displacement).toDouble(),
-      left: leftPosition(displacement).toDouble(),
+      top: background.y + topPosition(displacement).toDouble(),
+      left: background.x + leftPosition(displacement).toDouble(),
       child: Container(
         width: size,
         height: size,

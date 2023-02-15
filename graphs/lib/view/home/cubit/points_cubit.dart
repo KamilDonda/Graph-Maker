@@ -1,5 +1,8 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:graphs/constants/sizes.dart';
 import 'package:graphs/models/line.dart';
 import 'package:graphs/models/loop.dart';
 import 'package:graphs/models/point.dart';
@@ -16,7 +19,7 @@ class PointsCubit extends Cubit<List<Sprite>> {
     Point(name: "", x: 600, y: 500, color: Colors.blue),
   ];
 
-  Sprite _background() => _sprites[0];
+  Sprite getBackground() => _sprites[0];
 
   void updatePoint(int dx, int dy, int id) {
     var point = _sprites.firstWhere((s) => s.id == id) as Point;
@@ -24,10 +27,10 @@ class PointsCubit extends Cubit<List<Sprite>> {
     var x = point.x + dx;
     var y = point.y + dy;
 
-    if (-_background().x + x + point.size > 1920) return;
-    if (-_background().y + y + point.size > 1080) return;
-    if (-_background().x + x < 0) return;
-    if (-_background().y + y < 0) return;
+    if (x + point.size > 1920) return;
+    if (y + point.size > 1080) return;
+    if (x < 0) return;
+    if (y < 0) return;
 
     point.x = x;
     point.y = y;
@@ -36,20 +39,21 @@ class PointsCubit extends Cubit<List<Sprite>> {
   }
 
   void updateSprite(int dx, int dy) {
-    // We move background and all sprites, which position is relative
-    // to background
-    var x = _background().x + dx;
-    var y = _background().y + dy;
+    var x = getBackground().x + dx;
+    var y = getBackground().y + dy;
 
-    // if (x > 200) return;
-    // if (y > 150) return;
-    // if (x < -300) return;
-    // if (y < -250) return;
+    var pixelRatio = window.devicePixelRatio;
+    var logicalScreenSize = window.physicalSize / pixelRatio;
+    var logicalWidth = logicalScreenSize.width;
+    var logicalHeight = logicalScreenSize.height;
 
-    for (var i = 0; i < _sprites.length; i++) {
-      _sprites[i].x += dx;
-      _sprites[i].y += dy;
-    }
+    if (x > 50) return;
+    if (y > 50) return;
+    if (x + AREA_SIZE_X + 50 + FORM_MAX_WIDTH < logicalWidth) return;
+    if (y + AREA_SIZE_Y + 50 + TOP_BAR_HEIGHT < logicalHeight) return;
+
+    getBackground().x += dx;
+    getBackground().y += dy;
 
     emit([..._sprites]);
   }

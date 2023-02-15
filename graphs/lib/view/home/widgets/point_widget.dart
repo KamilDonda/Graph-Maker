@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:graphs/models/point.dart';
+import 'package:graphs/models/sprite.dart';
 import 'package:graphs/view/home/cubit/points_cubit.dart';
 import 'package:graphs/view/home/widgets/sprite_widget.dart';
 
@@ -26,9 +27,10 @@ class PointWidget extends SpriteWidget {
   Widget build(BuildContext context) {
     bool isFocused =
         BlocProvider.of<PointsCubit>(context).getFocusedID() == point.id;
+    Sprite background = BlocProvider.of<PointsCubit>(context).getBackground();
     return Positioned(
-      top: point.y.toDouble(),
-      left: point.x.toDouble(),
+      top: background.y + point.y.toDouble(),
+      left: background.x + point.x.toDouble(),
       child: GestureDetector(
         onTapDown: (details) {
           if (BlocProvider.of<PointsCubit>(context).getFocusedID() ==

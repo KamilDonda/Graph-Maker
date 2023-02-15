@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:graphs/constants/sizes.dart';
 import 'package:graphs/view/home/cubit/points_cubit.dart';
 import 'package:graphs/view/home/widgets/form_widget.dart';
 import 'package:graphs/view/home/widgets/graph_area_widget.dart';
@@ -16,7 +17,7 @@ class HomePage extends StatelessWidget {
             child: Column(
               children: [
                 SizedBox(
-                  height: 50,
+                  height: TOP_BAR_HEIGHT,
                   child: Row(
                     children: [
                       const SizedBox(width: 10),

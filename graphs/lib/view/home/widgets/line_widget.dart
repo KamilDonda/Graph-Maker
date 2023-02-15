@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:graphs/constants/sizes.dart';
 import 'package:graphs/models/line.dart';
+import 'package:graphs/models/sprite.dart';
 import 'package:graphs/view/home/cubit/points_cubit.dart';
 import 'package:graphs/view/home/widgets/sprite_widget.dart';
 
@@ -33,12 +34,12 @@ class LineWidget extends SpriteWidget {
     var b = x2 - x1;
     var tan = a / b;
     var degrees = math.atan(tan);
-
+    Sprite background = BlocProvider.of<PointsCubit>(context).getBackground();
     return Stack(
       children: [
         Positioned(
-          top: y1,
-          left: x1,
+          top: background.y + y1,
+          left: background.x + x1,
           child: Transform.rotate(
             angle: degrees,
             alignment: Alignment.topLeft,
@@ -50,8 +51,8 @@ class LineWidget extends SpriteWidget {
           ),
         ),
         Positioned(
-          top: y1 + (a - DEFAULT_LINE_POINT_SIZE) / 2,
-          left: x1 + (b - DEFAULT_LINE_POINT_SIZE) / 2,
+          top: background.y + y1 + (a - DEFAULT_LINE_POINT_SIZE) / 2,
+          left: background.x + x1 + (b - DEFAULT_LINE_POINT_SIZE) / 2,
           child: GestureDetector(
             onSecondaryTap: () {
               BlocProvider.of<PointsCubit>(context).removeLine(line);
