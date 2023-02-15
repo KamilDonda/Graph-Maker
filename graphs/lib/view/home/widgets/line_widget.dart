@@ -8,9 +8,12 @@ import 'package:graphs/view/home/cubit/points_cubit.dart';
 import 'package:graphs/view/home/widgets/sprite_widget.dart';
 
 class LineWidget extends SpriteWidget {
-  const LineWidget({super.key, required this.line}) : super(sprite: line);
+  const LineWidget({super.key, required this.line}) : super();
 
   final Line line;
+
+  final bulletSize = DEFAULT_LINE_POINT_SIZE / 2;
+  final innerBulletSize = DEFAULT_LINE_POINT_SIZE / 2 - 2;
 
   @override
   Widget build(BuildContext context) {
@@ -33,12 +36,12 @@ class LineWidget extends SpriteWidget {
     var b = x2 - x1;
     var tan = a / b;
     var degrees = math.atan(tan);
-
+    var background = BlocProvider.of<PointsCubit>(context).background;
     return Stack(
       children: [
         Positioned(
-          top: y1,
-          left: x1,
+          top: background.y + y1,
+          left: background.x + x1,
           child: Transform.rotate(
             angle: degrees,
             alignment: Alignment.topLeft,
@@ -50,25 +53,20 @@ class LineWidget extends SpriteWidget {
           ),
         ),
         Positioned(
-          top: y1 + (a - DEFAULT_LINE_POINT_SIZE) / 2,
-          left: x1 + (b - DEFAULT_LINE_POINT_SIZE) / 2,
+          top: background.y + y1 + (a - DEFAULT_LINE_POINT_SIZE) / 2,
+          left: background.x + x1 + (b - DEFAULT_LINE_POINT_SIZE) / 2,
           child: GestureDetector(
-            onSecondaryTap: () {
-              BlocProvider.of<PointsCubit>(context).removeLine(line);
-            },
-            child: Container(
-              width: DEFAULT_LINE_POINT_SIZE,
-              height: DEFAULT_LINE_POINT_SIZE,
-              decoration: BoxDecoration(
-                color: Colors.grey,
-                shape: BoxShape.circle,
-                border: Border.all(
-                  color: Colors.black,
-                  width: 1,
+              onSecondaryTap: () {
+                BlocProvider.of<PointsCubit>(context).removeLine(line);
+              },
+              child: CircleAvatar(
+                radius: bulletSize,
+                backgroundColor: Colors.black,
+                child: CircleAvatar(
+                  radius: innerBulletSize,
+                  backgroundColor: Colors.grey,
                 ),
-              ),
-            ),
-          ),
+              )),
         ),
       ],
     );

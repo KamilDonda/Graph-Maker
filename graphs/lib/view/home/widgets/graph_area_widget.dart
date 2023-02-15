@@ -15,9 +15,7 @@ class GraphAreaWidget extends StatelessWidget {
   const GraphAreaWidget({Key? key}) : super(key: key);
 
   SpriteWidget widget(int index, Sprite sprite) {
-    if (index == 0) {
-      return SpriteWidget(sprite: sprite);
-    } else if (sprite is Point) {
+    if (sprite is Point) {
       return PointWidget(point: sprite);
     } else if (sprite is Line) {
       return LineWidget(line: sprite);
@@ -26,19 +24,38 @@ class GraphAreaWidget extends StatelessWidget {
     }
   }
 
+  void click(BuildContext context) {
+    BlocProvider.of<PointsCubit>(context).focusSprite();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(2),
-      color: const Color(0xfff1f1f1),
-      child: BlocBuilder<PointsCubit, List<Sprite>>(
-        builder: (_, sprites) {
-          return Stack(
-            children: sprites
-                .mapIndexed((index, sprite) => widget(index, sprite))
-                .toList(),
-          );
-        },
+    return GestureDetector(
+      onTap: () {
+        click(context);
+      },
+      onSecondaryTap: () {
+        click(context);
+      },
+      onTertiaryTapDown: (details) {
+        click(context);
+      },
+      onPanUpdate: (position) {
+        BlocProvider.of<PointsCubit>(context)
+            .updateSprite(position.delta.dx.toInt(), position.delta.dy.toInt());
+      },
+      child: Container(
+        padding: const EdgeInsets.all(2),
+        color: const Color(0xfff1f1f1),
+        child: BlocBuilder<PointsCubit, List<Sprite>>(
+          builder: (_, sprites) {
+            return Stack(
+              children: sprites
+                  .mapIndexed((index, sprite) => widget(index, sprite))
+                  .toList(),
+            );
+          },
+        ),
       ),
     );
   }

@@ -5,7 +5,7 @@ import 'package:graphs/view/home/cubit/points_cubit.dart';
 import 'package:graphs/view/home/widgets/sprite_widget.dart';
 
 class PointWidget extends SpriteWidget {
-  const PointWidget({super.key, required this.point}) : super(sprite: point);
+  const PointWidget({super.key, required this.point}) : super();
 
   final Point point;
 
@@ -18,17 +18,18 @@ class PointWidget extends SpriteWidget {
   }
 
   void onMove(BuildContext context, DragUpdateDetails position) {
-    BlocProvider.of<PointsCubit>(context)
-        .updatePoint(position.delta.dx, position.delta.dy, point.id);
+    BlocProvider.of<PointsCubit>(context).updatePoint(
+        position.delta.dx.toInt(), position.delta.dy.toInt(), point.id);
   }
 
   @override
   Widget build(BuildContext context) {
     bool isFocused =
         BlocProvider.of<PointsCubit>(context).getFocusedID() == point.id;
+    var background = BlocProvider.of<PointsCubit>(context).background;
     return Positioned(
-      top: point.y,
-      left: point.x,
+      top: background.y + point.y.toDouble(),
+      left: background.x + point.x.toDouble(),
       child: GestureDetector(
         onTapDown: (details) {
           if (BlocProvider.of<PointsCubit>(context).getFocusedID() ==
@@ -46,23 +47,25 @@ class PointWidget extends SpriteWidget {
         onSecondaryTap: () {
           onRightClick(context);
         },
-        child: Container(
-          width: point.size,
-          height: point.size,
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            color: point.color,
-            shape: BoxShape.circle,
-            border: Border.all(
-              color: isFocused ? Colors.black : const Color(0xFF282828),
-              width: isFocused ? 5 : 3,
+        child: Material(
+          elevation: 4,
+          shape: const CircleBorder(),
+          child: CircleAvatar(
+            radius: point.size / 2,
+            backgroundColor: isFocused ? Colors.black : const Color(0xFF282828),
+            child: CircleAvatar(
+              radius: isFocused ? point.size / 2 - 6 : point.size / 2 - 3,
+              backgroundColor:
+                  isFocused ? point.color.withAlpha(220) : point.color,
+              child: Text(
+                point.name,
+                style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 35,
+                    fontWeight:
+                        isFocused ? FontWeight.bold : FontWeight.normal),
+              ),
             ),
-          ),
-          child: Text(
-            point.name,
-            style: TextStyle(
-                fontSize: 35,
-                fontWeight: isFocused ? FontWeight.bold : FontWeight.normal),
           ),
         ),
       ),
