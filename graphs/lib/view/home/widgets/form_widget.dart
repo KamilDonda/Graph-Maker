@@ -64,11 +64,11 @@ class _FormWidgetState extends State<FormWidget> {
     );
   }
 
-  int _parseString(String value) {
+  int _parseString(String value, {int defaultValue = 200}) {
     try {
       return int.parse(value);
     } on Exception {
-      return 200;
+      return defaultValue;
     }
   }
 
@@ -171,8 +171,12 @@ class _FormWidgetState extends State<FormWidget> {
                       onPressed: () {
                         BlocProvider.of<PointsCubit>(context).addPoint(Point(
                             name: nameController.text,
-                            x: _parseString(xController.text),
-                            y: _parseString(yController.text),
+                            x: _parseString(xController.text,
+                                defaultValue:
+                                    (AREA_SIZE_X - DEFAULT_POINT_SIZE) ~/ 2),
+                            y: _parseString(yController.text,
+                                defaultValue:
+                                    (AREA_SIZE_Y - DEFAULT_POINT_SIZE) ~/ 2),
                             color: _mainColor!));
                       },
                       label: Container(
@@ -269,9 +273,11 @@ class _FormWidgetState extends State<FormWidget> {
                         ),
                         if (isHinterOpen)
                           const BulletList([
-                            "To select point, click it by Left Mouse Button",
-                            "To connect points, first select point, then click on another point by Right Mouse Button",
-                            "To delete connection, click it by Left Mouse Button",
+                            "To select point, use Left Mouse Button on it",
+                            "To connect points, first select point, then use Right Mouse Button on another point",
+                            "To delete connection, use Right Mouse Button on the bullet",
+                            "When X or Y is empty, point will be placed in the center of the area",
+                            "If point is selected, the new one will be placed at the same coordinates",
                           ]),
                       ],
                     )),

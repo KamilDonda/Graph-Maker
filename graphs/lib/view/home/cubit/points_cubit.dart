@@ -17,9 +17,9 @@ class PointsCubit extends Cubit<List<Sprite>> {
 
   final List<Sprite> _sprites = [
     Point(name: "", x: 600, y: 100, color: Colors.blue),
-    Point(name: "", x: 300, y: 300, color: Colors.blue),
-    Point(name: "", x: 600, y: 300, color: Colors.blue),
-    Point(name: "", x: 600, y: 500, color: Colors.blue),
+    Point(name: "", x: 300, y: 400, color: Colors.blue),
+    Point(name: "", x: 600, y: 700, color: Colors.blue),
+    Point(name: "", x: 900, y: 400, color: Colors.blue),
   ];
 
   void updatePoint(int dx, int dy, int id) {
@@ -170,6 +170,25 @@ class PointsCubit extends Cubit<List<Sprite>> {
     p1.neighbors_ids.remove(p2.id);
     p2.neighbors_ids.remove(p1.id);
 
+    emit([..._sprites]);
+  }
+
+  bool _bulletsVisibility = true;
+
+  bool areBulletsVisible() => _bulletsVisibility;
+
+  void toggleBulletsVisibility() {
+    _bulletsVisibility = !_bulletsVisibility;
+    emit([..._sprites]);
+  }
+
+  void updateBullet(Line line, dx, dy) {
+    line.p3.move(dx: dx, dy: dy);
+    emit([..._sprites]);
+  }
+
+  void resetBullet(Line line) {
+    line.p3.reset();
     emit([..._sprites]);
   }
 }
