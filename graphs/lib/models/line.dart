@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:graphs/models/point.dart';
+import 'package:graphs/models/position.dart';
 import 'package:graphs/models/sprite.dart';
 
 class Line extends Sprite {
   late Point p1;
   late Point p2;
+  late Position p3 = Position();
   late Color color;
   late double width;
 

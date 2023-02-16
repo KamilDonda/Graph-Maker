@@ -12,8 +12,8 @@ class LineWidget extends SpriteWidget {
 
   final Line line;
 
-  final bulletSize = DEFAULT_LINE_POINT_SIZE / 2;
-  final innerBulletSize = DEFAULT_LINE_POINT_SIZE / 2 - 2;
+  final bulletSize = DEFAULT_BULLET_SIZE / 2;
+  final innerBulletSize = DEFAULT_BULLET_SIZE / 2 - 2;
 
   @override
   Widget build(BuildContext context) {
@@ -55,11 +55,19 @@ class LineWidget extends SpriteWidget {
         ),
         if (areVisible)
           Positioned(
-            top: background.y + y1 + (a - DEFAULT_LINE_POINT_SIZE) / 2,
-            left: background.x + x1 + (b - DEFAULT_LINE_POINT_SIZE) / 2,
+            top: background.y + y1 + (a - DEFAULT_BULLET_SIZE) / 2 + line.p3.y,
+            left: background.x + x1 + (b - DEFAULT_BULLET_SIZE) / 2 + line.p3.x,
             child: GestureDetector(
                 onSecondaryTap: () {
                   BlocProvider.of<PointsCubit>(context).removeLine(line);
+                },
+                onTap: () {
+                  print(
+                      "x: ${background.x + x1 + (b - DEFAULT_BULLET_SIZE) / 2 + line.p3.x}, y: ${background.y + y1 + (a - DEFAULT_BULLET_SIZE) / 2 + line.p3.y}");
+                },
+                onPanUpdate: (position) {
+                  BlocProvider.of<PointsCubit>(context).updateBullet(line,
+                      position.delta.dx.toInt(), position.delta.dy.toInt());
                 },
                 child: CircleAvatar(
                   radius: bulletSize,
