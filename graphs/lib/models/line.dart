@@ -9,11 +9,13 @@ class Line extends Sprite {
   late Position p3 = Position();
   late Color color;
   late double width;
+  late double weight;
 
   Line({
     required this.p1,
     required this.p2,
     this.color = Colors.black,
     this.width = 2,
+    this.weight = 1,
   }) : super(x: 0, y: 0);
 }

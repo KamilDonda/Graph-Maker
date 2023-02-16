@@ -1,6 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:graphs/constants/colors.dart';
 import 'package:graphs/models/line.dart';
 import 'package:graphs/models/loop.dart';
 import 'package:graphs/models/point.dart';
@@ -46,7 +47,7 @@ class GraphAreaWidget extends StatelessWidget {
       },
       child: Container(
         padding: const EdgeInsets.all(2),
-        color: const Color(0xfff1f1f1),
+        color: backgroundColor,
         child: BlocBuilder<PointsCubit, List<Sprite>>(
           builder: (_, sprites) {
             return Stack(

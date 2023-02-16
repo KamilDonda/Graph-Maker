@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:graphs/constants/colors.dart';
 import 'package:graphs/constants/sizes.dart';
 import 'package:graphs/models/line.dart';
 import 'package:graphs/models/position.dart';
@@ -77,25 +78,46 @@ class LineWidget extends SpriteWidget {
             top: by - DEFAULT_BULLET_SIZE / 2,
             left: bx - DEFAULT_BULLET_SIZE / 2,
             child: GestureDetector(
-                onSecondaryTap: () {
-                  BlocProvider.of<PointsCubit>(context).removeLine(line);
-                },
-                onTap: () {
-                  BlocProvider.of<PointsCubit>(context).resetBullet(line);
-                },
-                onPanUpdate: (position) {
-                  BlocProvider.of<PointsCubit>(context).updateBullet(line,
-                      position.delta.dx.toInt(), position.delta.dy.toInt());
-                },
+              onSecondaryTap: () {
+                BlocProvider.of<PointsCubit>(context).removeLine(line);
+              },
+              onTap: () {
+                BlocProvider.of<PointsCubit>(context).resetBullet(line);
+              },
+              onPanUpdate: (position) {
+                BlocProvider.of<PointsCubit>(context).updateBullet(
+                    line, position.delta.dx.toInt(), position.delta.dy.toInt());
+              },
+              child: CircleAvatar(
+                radius: bulletSize,
+                backgroundColor: Colors.black,
                 child: CircleAvatar(
-                  radius: bulletSize,
-                  backgroundColor: Colors.black,
-                  child: CircleAvatar(
-                    radius: innerBulletSize,
-                    backgroundColor: Colors.grey,
-                  ),
-                )),
+                  radius: innerBulletSize,
+                  backgroundColor: Colors.grey,
+                ),
+              ),
+            ),
           ),
+        Positioned(
+          top: by - DEFAULT_BULLET_SIZE / 2 + WEIGHT_DISPLACEMENT,
+          left: bx - DEFAULT_BULLET_SIZE / 2 + WEIGHT_DISPLACEMENT,
+          child: CircleAvatar(
+            radius: DEFAULT_WEIGHT_SIZE / 2,
+            backgroundColor: Colors.black,
+            child: CircleAvatar(
+              radius: DEFAULT_WEIGHT_SIZE / 2 - 2,
+              backgroundColor: backgroundColor,
+              child: Text(
+                line.weight.toString(),
+                style: const TextStyle(
+                  color: Colors.black,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
+        ),
       ],
     );
   }
