@@ -7,6 +7,11 @@ class Position {
     _y += dy;
   }
 
+  void reset() {
+    _x = 0;
+    _y = 0;
+  }
+
   int get x => _x;
   int get y => _y;
 }
