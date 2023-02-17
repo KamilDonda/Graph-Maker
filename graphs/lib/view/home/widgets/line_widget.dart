@@ -73,31 +73,6 @@ class LineWidget extends SpriteWidget {
       children: [
         _drawLine(background, p1x, p1y, c, d),
         _drawLine(background, p2x, p2y, e, f),
-        if (areVisible)
-          Positioned(
-            top: by - DEFAULT_BULLET_SIZE / 2,
-            left: bx - DEFAULT_BULLET_SIZE / 2,
-            child: GestureDetector(
-              onSecondaryTap: () {
-                BlocProvider.of<SpritesCubit>(context).removeLine(line);
-              },
-              onTap: () {
-                BlocProvider.of<SpritesCubit>(context).resetBullet(line);
-              },
-              onPanUpdate: (position) {
-                BlocProvider.of<SpritesCubit>(context).updateBullet(
-                    line, position.delta.dx.toInt(), position.delta.dy.toInt());
-              },
-              child: CircleAvatar(
-                radius: bulletSize,
-                backgroundColor: Colors.black,
-                child: CircleAvatar(
-                  radius: innerBulletSize,
-                  backgroundColor: Colors.grey,
-                ),
-              ),
-            ),
-          ),
         Positioned(
           top: by - DEFAULT_BULLET_SIZE / 2 + WEIGHT_DISPLACEMENT,
           left: bx - DEFAULT_BULLET_SIZE / 2 + WEIGHT_DISPLACEMENT,
@@ -123,6 +98,31 @@ class LineWidget extends SpriteWidget {
             ),
           ),
         ),
+        if (areVisible)
+          Positioned(
+            top: by - DEFAULT_BULLET_SIZE / 2,
+            left: bx - DEFAULT_BULLET_SIZE / 2,
+            child: GestureDetector(
+              onSecondaryTap: () {
+                BlocProvider.of<SpritesCubit>(context).removeLine(line);
+              },
+              onTap: () {
+                BlocProvider.of<SpritesCubit>(context).resetBullet(line);
+              },
+              onPanUpdate: (position) {
+                BlocProvider.of<SpritesCubit>(context).updateBullet(
+                    line, position.delta.dx.toInt(), position.delta.dy.toInt());
+              },
+              child: CircleAvatar(
+                radius: bulletSize,
+                backgroundColor: Colors.black,
+                child: CircleAvatar(
+                  radius: innerBulletSize,
+                  backgroundColor: Colors.grey,
+                ),
+              ),
+            ),
+          ),
       ],
     );
   }
