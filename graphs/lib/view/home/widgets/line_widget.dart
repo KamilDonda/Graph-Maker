@@ -101,18 +101,23 @@ class LineWidget extends SpriteWidget {
         Positioned(
           top: by - DEFAULT_BULLET_SIZE / 2 + WEIGHT_DISPLACEMENT,
           left: bx - DEFAULT_BULLET_SIZE / 2 + WEIGHT_DISPLACEMENT,
-          child: CircleAvatar(
-            radius: DEFAULT_WEIGHT_SIZE / 2,
-            backgroundColor: Colors.black,
+          child: GestureDetector(
+            onTap: () {
+              BlocProvider.of<PointsCubit>(context).focusSprite(id: line.id);
+            },
             child: CircleAvatar(
-              radius: DEFAULT_WEIGHT_SIZE / 2 - 2,
-              backgroundColor: backgroundColor,
-              child: Text(
-                line.weight.toString(),
-                style: const TextStyle(
-                  color: Colors.black,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
+              radius: DEFAULT_WEIGHT_SIZE / 2,
+              backgroundColor: Colors.black,
+              child: CircleAvatar(
+                radius: DEFAULT_WEIGHT_SIZE / 2 - 2,
+                backgroundColor: backgroundColor,
+                child: Text(
+                  line.weight.toString(),
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ),

@@ -3,8 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:graphs/constants/sizes.dart';
 import 'package:graphs/models/sprite.dart';
 import 'package:graphs/view/home/cubit/points_cubit.dart';
-import 'package:graphs/view/home/widgets/form_widget.dart';
+import 'package:graphs/view/home/cubit/right_menu/hinter_cubit.dart';
+import 'package:graphs/view/home/cubit/right_menu/right_menu_cubit.dart';
 import 'package:graphs/view/home/widgets/graph_area_widget.dart';
+import 'package:graphs/view/home/widgets/right_menu/right_menu_widget.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -73,7 +75,11 @@ class HomePage extends StatelessWidget {
             width: 1,
             thickness: 1,
           ),
-          const FormWidget(),
+          // const FormWidget(),
+          MultiBlocProvider(providers: [
+            BlocProvider(create: (_) => RightMenuCubit()),
+            BlocProvider(create: (_) => HinterCubit()),
+          ], child: const RightMenuWidget()),
         ],
       ),
     );
