@@ -37,7 +37,6 @@ class RightMenuWidget extends StatelessWidget {
                   return Column(
                     children: [
                       SizedBox(
-                        height: 60,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -63,6 +62,7 @@ class RightMenuWidget extends StatelessWidget {
                           ],
                         ),
                       ),
+                      const SizedBox(height: 20),
                       (sprite is Line)
                           ? LineEditorWidget(
                               isMenuOpen: isMenuOpen, line: sprite)

@@ -21,11 +21,11 @@ class LineEditorWidget extends StatefulWidget {
 class _LineEditorWidgetState extends State<LineEditorWidget> {
   final TextEditingController weightController = TextEditingController();
 
-  double _parseString(String value, {double defaultValue = 1}) {
+  double _parseString(String value) {
     try {
       return double.parse(value);
     } on Exception {
-      return defaultValue;
+      return widget.line.weight;
     }
   }
 
@@ -39,7 +39,7 @@ class _LineEditorWidgetState extends State<LineEditorWidget> {
           controller: weightController,
           labelText: 'Weight',
         ),
-        const SizedBox(height: 10),
+        const SizedBox(height: 50),
         if (widget.isMenuOpen)
           FloatingActionButton.extended(
             onPressed: () {

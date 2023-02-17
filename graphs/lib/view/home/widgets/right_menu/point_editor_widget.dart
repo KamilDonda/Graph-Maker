@@ -166,7 +166,7 @@ class _PointEditorWidgetState extends State<PointEditorWidget> {
           FloatingActionButton.extended(
             onPressed: () {
               BlocProvider.of<SpritesCubit>(context).editPoint(
-                id,
+                widget.sprite as Point,
                 nameController.text,
                 _parseString(xController.text),
                 _parseString(yController.text),
