@@ -85,7 +85,7 @@ class LoopWidget extends SpriteWidget {
                 BlocProvider.of<SpritesCubit>(context).focusSprite(id: loop.id);
               },
               onSecondaryTap: () {
-                BlocProvider.of<SpritesCubit>(context).removeLoop(loop);
+                BlocProvider.of<SpritesCubit>(context).removeEdge(loop);
               },
               child: CircleAvatar(
                 radius: DEFAULT_WEIGHT_SIZE / 2,

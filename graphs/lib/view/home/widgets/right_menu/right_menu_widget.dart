@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:graphs/constants/sizes.dart';
-import 'package:graphs/models/line.dart';
+import 'package:graphs/models/edge.dart';
 import 'package:graphs/models/sprite.dart';
 import 'package:graphs/view/home/cubit/right_menu/right_menu_cubit.dart';
 import 'package:graphs/view/home/cubit/sprites_cubit.dart';
@@ -43,7 +43,7 @@ class RightMenuWidget extends StatelessWidget {
                             isMenuOpen
                                 ? Expanded(
                                     child: Text(
-                                    (sprite is Line)
+                                    (sprite is Edge)
                                         ? "Edit edge"
                                         : "Edit vertex",
                                     style: const TextStyle(fontSize: 30),
@@ -63,9 +63,9 @@ class RightMenuWidget extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 20),
-                      (sprite is Line)
+                      (sprite is Edge)
                           ? LineEditorWidget(
-                              isMenuOpen: isMenuOpen, line: sprite)
+                              isMenuOpen: isMenuOpen, edge: sprite)
                           : PointEditorWidget(
                               isMenuOpen: isMenuOpen, sprite: sprite),
                     ],

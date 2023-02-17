@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:graphs/models/edge.dart';
 import 'package:graphs/models/point.dart';
-import 'package:graphs/models/sprite.dart';
 
-class Loop extends Sprite {
+class Loop extends Edge {
   late Point point;
   late Color color;
   late double width;
@@ -14,7 +14,7 @@ class Loop extends Sprite {
     this.color = Colors.black,
     this.width = 2,
     this.weight = 1,
-  }) : super(x: 0, y: 0);
+  }) : super();
 
   void click() {
     counter++;
