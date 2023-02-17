@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:graphs/constants/sizes.dart';
 import 'package:graphs/models/sprite.dart';
-import 'package:graphs/view/home/cubit/points_cubit.dart';
-import 'package:graphs/view/home/widgets/form_widget.dart';
+import 'package:graphs/view/home/cubit/right_menu/hinter_cubit.dart';
+import 'package:graphs/view/home/cubit/right_menu/right_menu_cubit.dart';
+import 'package:graphs/view/home/cubit/sprites_cubit.dart';
 import 'package:graphs/view/home/widgets/graph_area_widget.dart';
+import 'package:graphs/view/home/widgets/right_menu/right_menu_widget.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -27,29 +29,28 @@ class HomePage extends StatelessWidget {
                         style: TextStyle(fontSize: 30),
                       ),
                       const Spacer(),
-                      BlocBuilder<PointsCubit, List<Sprite>>(
-                          builder: (context, snapshot) {
-                        var areVisible = BlocProvider.of<PointsCubit>(context)
-                            .areBulletsVisible();
+                      BlocBuilder<SpritesCubit, List<Sprite>>(builder: (_, __) {
+                        var areVisible = BlocProvider.of<SpritesCubit>(context)
+                            .areWeightsVisible();
                         return ElevatedButton.icon(
                           onPressed: () {
-                            BlocProvider.of<PointsCubit>(context)
-                                .toggleBulletsVisibility();
+                            BlocProvider.of<SpritesCubit>(context)
+                                .toggleWeightsVisibility();
                           },
                           icon: Icon(areVisible
                               ? Icons.visibility_off
                               : Icons.visibility),
                           label: Text(
-                              areVisible ? "Hide bullets" : "Show bullets"),
+                              areVisible ? "Hide weights" : "Show weights"),
                           style: ElevatedButton.styleFrom(
-                              fixedSize: const Size(140, 40),
+                              fixedSize: const Size(150, 40),
                               backgroundColor: Colors.grey),
                         );
                       }),
                       const SizedBox(width: 10),
                       ElevatedButton.icon(
                         onPressed: () {
-                          BlocProvider.of<PointsCubit>(context).clearAll();
+                          BlocProvider.of<SpritesCubit>(context).clearAll();
                         },
                         icon: const Icon(Icons.clear),
                         label: const Text("Clear all"),
@@ -73,7 +74,11 @@ class HomePage extends StatelessWidget {
             width: 1,
             thickness: 1,
           ),
-          const FormWidget(),
+          // const FormWidget(),
+          MultiBlocProvider(providers: [
+            BlocProvider(create: (_) => RightMenuCubit()),
+            BlocProvider(create: (_) => HinterCubit()),
+          ], child: const RightMenuWidget()),
         ],
       ),
     );

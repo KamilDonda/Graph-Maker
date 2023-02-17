@@ -10,6 +10,7 @@ class Line extends Sprite {
   late Color color;
   late double width;
   late double weight;
+  late int timestamp = 0;
 
   Line({
     required this.p1,

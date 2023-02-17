@@ -6,16 +6,13 @@ import 'package:graphs/constants/colors.dart';
 import 'package:graphs/constants/sizes.dart';
 import 'package:graphs/models/line.dart';
 import 'package:graphs/models/position.dart';
-import 'package:graphs/view/home/cubit/points_cubit.dart';
+import 'package:graphs/view/home/cubit/sprites_cubit.dart';
 import 'package:graphs/view/home/widgets/sprite_widget.dart';
 
 class LineWidget extends SpriteWidget {
   const LineWidget({super.key, required this.line}) : super();
 
   final Line line;
-
-  final bulletSize = DEFAULT_BULLET_SIZE / 2;
-  final innerBulletSize = DEFAULT_BULLET_SIZE / 2 - 2;
 
   Positioned _drawLine(
     Position bg,
@@ -39,10 +36,20 @@ class LineWidget extends SpriteWidget {
     );
   }
 
+  void onTapDown(BuildContext context, TapDownDetails details) {
+    int currentTime = DateTime.now().millisecondsSinceEpoch;
+    BlocProvider.of<SpritesCubit>(context).focusSprite(id: line.id);
+
+    if (currentTime - line.timestamp < 300) {
+      BlocProvider.of<SpritesCubit>(context).resetBullet(line);
+    }
+    line.timestamp = currentTime;
+  }
+
   @override
   Widget build(BuildContext context) {
-    var background = BlocProvider.of<PointsCubit>(context).background;
-    var areVisible = BlocProvider.of<PointsCubit>(context).areBulletsVisible();
+    var background = BlocProvider.of<SpritesCubit>(context).background;
+    var areVisible = BlocProvider.of<SpritesCubit>(context).areWeightsVisible();
 
     var p1x = background.x + line.p1.x + line.p1.size / 2;
     var p1y = background.y + line.p1.y + line.p1.size / 2;
@@ -69,55 +76,53 @@ class LineWidget extends SpriteWidget {
       p2y = by;
     }
 
+    bool isFocused =
+        BlocProvider.of<SpritesCubit>(context).getFocusedID() == line.id;
+
     return Stack(
       children: [
         _drawLine(background, p1x, p1y, c, d),
         _drawLine(background, p2x, p2y, e, f),
         if (areVisible)
           Positioned(
-            top: by - DEFAULT_BULLET_SIZE / 2,
-            left: bx - DEFAULT_BULLET_SIZE / 2,
+            top: by - DEFAULT_WEIGHT_SIZE / 2,
+            left: bx - DEFAULT_WEIGHT_SIZE / 2,
             child: GestureDetector(
-              onSecondaryTap: () {
-                BlocProvider.of<PointsCubit>(context).removeLine(line);
+              onTapDown: (details) {
+                onTapDown(context, details);
               },
-              onTap: () {
-                BlocProvider.of<PointsCubit>(context).resetBullet(line);
+              onPanStart: (details) {
+                BlocProvider.of<SpritesCubit>(context).focusSprite(id: line.id);
+              },
+              onSecondaryTap: () {
+                BlocProvider.of<SpritesCubit>(context).removeLine(line);
               },
               onPanUpdate: (position) {
-                BlocProvider.of<PointsCubit>(context).updateBullet(
+                BlocProvider.of<SpritesCubit>(context).updateBullet(
                     line, position.delta.dx.toInt(), position.delta.dy.toInt());
               },
               child: CircleAvatar(
-                radius: bulletSize,
+                radius: DEFAULT_WEIGHT_SIZE / 2,
                 backgroundColor: Colors.black,
                 child: CircleAvatar(
-                  radius: innerBulletSize,
-                  backgroundColor: Colors.grey,
+                  radius: isFocused
+                      ? DEFAULT_WEIGHT_SIZE / 2 - 4
+                      : DEFAULT_WEIGHT_SIZE / 2 - 2,
+                  backgroundColor: isFocused
+                      ? backgroundColor.withAlpha(230)
+                      : backgroundColor,
+                  child: Text(
+                    line.weight.toString(),
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 20,
+                      fontWeight: isFocused ? FontWeight.w900 : FontWeight.w600,
+                    ),
+                  ),
                 ),
               ),
             ),
           ),
-        Positioned(
-          top: by - DEFAULT_BULLET_SIZE / 2 + WEIGHT_DISPLACEMENT,
-          left: bx - DEFAULT_BULLET_SIZE / 2 + WEIGHT_DISPLACEMENT,
-          child: CircleAvatar(
-            radius: DEFAULT_WEIGHT_SIZE / 2,
-            backgroundColor: Colors.black,
-            child: CircleAvatar(
-              radius: DEFAULT_WEIGHT_SIZE / 2 - 2,
-              backgroundColor: backgroundColor,
-              child: Text(
-                line.weight.toString(),
-                style: const TextStyle(
-                  color: Colors.black,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          ),
-        ),
       ],
     );
   }

@@ -10,8 +10,8 @@ import 'package:graphs/models/point.dart';
 import 'package:graphs/models/position.dart';
 import 'package:graphs/models/sprite.dart';
 
-class PointsCubit extends Cubit<List<Sprite>> {
-  PointsCubit() : super([]);
+class SpritesCubit extends Cubit<List<Sprite>> {
+  SpritesCubit() : super([]);
 
   Position background = Position();
 
@@ -63,14 +63,13 @@ class PointsCubit extends Cubit<List<Sprite>> {
     emit([..._sprites]);
   }
 
-  void editPoint(int id, String name, int x, int y, Color color) {
-    int index = _sprites.indexOf(_sprites.firstWhere((e) => e.id == id));
+  void editPoint(Point point, String name, int x, int y, Color color) {
     // Every creation of the new Point will increment the id, so we need to
     // update point's values one by one instead of creating a new Point
-    (_sprites[index] as Point).name = name;
-    (_sprites[index] as Point).x = x;
-    (_sprites[index] as Point).y = y;
-    (_sprites[index] as Point).color = color;
+    point.name = name;
+    point.x = x;
+    point.y = y;
+    point.color = color;
 
     emit([..._sprites]);
   }
@@ -113,7 +112,7 @@ class PointsCubit extends Cubit<List<Sprite>> {
     emit([..._sprites]);
   }
 
-  void getPoints() => emit(_sprites);
+  void getSprites() => emit(_sprites);
 
   int _focusedID = UNFOCUSED;
 
@@ -173,12 +172,12 @@ class PointsCubit extends Cubit<List<Sprite>> {
     emit([..._sprites]);
   }
 
-  bool _bulletsVisibility = true;
+  bool _weightsVisibility = true;
 
-  bool areBulletsVisible() => _bulletsVisibility;
+  bool areWeightsVisible() => _weightsVisibility;
 
-  void toggleBulletsVisibility() {
-    _bulletsVisibility = !_bulletsVisibility;
+  void toggleWeightsVisibility() {
+    _weightsVisibility = !_weightsVisibility;
     emit([..._sprites]);
   }
 
@@ -189,6 +188,13 @@ class PointsCubit extends Cubit<List<Sprite>> {
 
   void resetBullet(Line line) {
     line.p3.reset();
+    _focusedID = UNFOCUSED;
+    emit([..._sprites]);
+  }
+
+  void editLine(Line line, double weight) {
+    line.weight = weight;
+
     emit([..._sprites]);
   }
 }
