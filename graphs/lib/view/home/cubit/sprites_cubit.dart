@@ -172,6 +172,10 @@ class SpritesCubit extends Cubit<List<Sprite>> {
     emit([..._sprites]);
   }
 
+  void removeLoop(Loop loop) {
+    // TODO
+  }
+
   bool _weightsVisibility = true;
 
   bool areWeightsVisible() => _weightsVisibility;

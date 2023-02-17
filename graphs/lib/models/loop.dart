@@ -6,16 +6,18 @@ class Loop extends Sprite {
   late Point point;
   late Color color;
   late double width;
-  late int counter = 0;
+  late double weight;
+  late int counter = 1;
 
   Loop({
     required this.point,
     this.color = Colors.black,
     this.width = 2,
+    this.weight = 1,
   }) : super(x: 0, y: 0);
 
   void click() {
     counter++;
-    if (counter == 4) counter = 0;
+    if (counter == 5) counter = 1;
   }
 }
