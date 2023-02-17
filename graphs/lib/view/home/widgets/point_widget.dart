@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:graphs/models/point.dart';
-import 'package:graphs/view/home/cubit/points_cubit.dart';
+import 'package:graphs/view/home/cubit/sprites_cubit.dart';
 import 'package:graphs/view/home/widgets/sprite_widget.dart';
 
 class PointWidget extends SpriteWidget {
@@ -10,31 +10,31 @@ class PointWidget extends SpriteWidget {
   final Point point;
 
   void onLeftClick(BuildContext context) {
-    BlocProvider.of<PointsCubit>(context).focusSprite(id: point.id);
+    BlocProvider.of<SpritesCubit>(context).focusSprite(id: point.id);
   }
 
   void onRightClick(BuildContext context) {
-    BlocProvider.of<PointsCubit>(context).addLine(point.id);
+    BlocProvider.of<SpritesCubit>(context).addLine(point.id);
   }
 
   void onMove(BuildContext context, DragUpdateDetails position) {
-    BlocProvider.of<PointsCubit>(context).updatePoint(
+    BlocProvider.of<SpritesCubit>(context).updatePoint(
         position.delta.dx.toInt(), position.delta.dy.toInt(), point.id);
   }
 
   @override
   Widget build(BuildContext context) {
     bool isFocused =
-        BlocProvider.of<PointsCubit>(context).getFocusedID() == point.id;
-    var background = BlocProvider.of<PointsCubit>(context).background;
+        BlocProvider.of<SpritesCubit>(context).getFocusedID() == point.id;
+    var background = BlocProvider.of<SpritesCubit>(context).background;
     return Positioned(
       top: background.y + point.y.toDouble(),
       left: background.x + point.x.toDouble(),
       child: GestureDetector(
         onTapDown: (details) {
-          if (BlocProvider.of<PointsCubit>(context).getFocusedID() ==
+          if (BlocProvider.of<SpritesCubit>(context).getFocusedID() ==
               point.id) {
-            BlocProvider.of<PointsCubit>(context).rotateLoop(point);
+            BlocProvider.of<SpritesCubit>(context).rotateLoop(point);
           }
           onLeftClick(context);
         },

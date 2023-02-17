@@ -6,7 +6,7 @@ import 'package:graphs/models/line.dart';
 import 'package:graphs/models/loop.dart';
 import 'package:graphs/models/point.dart';
 import 'package:graphs/models/sprite.dart';
-import 'package:graphs/view/home/cubit/points_cubit.dart';
+import 'package:graphs/view/home/cubit/sprites_cubit.dart';
 import 'package:graphs/view/home/widgets/line_widget.dart';
 import 'package:graphs/view/home/widgets/loop_widget.dart';
 import 'package:graphs/view/home/widgets/point_widget.dart';
@@ -26,7 +26,7 @@ class GraphAreaWidget extends StatelessWidget {
   }
 
   void click(BuildContext context) {
-    BlocProvider.of<PointsCubit>(context).focusSprite();
+    BlocProvider.of<SpritesCubit>(context).focusSprite();
   }
 
   @override
@@ -42,13 +42,13 @@ class GraphAreaWidget extends StatelessWidget {
         click(context);
       },
       onPanUpdate: (position) {
-        BlocProvider.of<PointsCubit>(context)
+        BlocProvider.of<SpritesCubit>(context)
             .updateSprite(position.delta.dx.toInt(), position.delta.dy.toInt());
       },
       child: Container(
         padding: const EdgeInsets.all(2),
         color: backgroundColor,
-        child: BlocBuilder<PointsCubit, List<Sprite>>(
+        child: BlocBuilder<SpritesCubit, List<Sprite>>(
           builder: (_, sprites) {
             return Stack(
               children: sprites
