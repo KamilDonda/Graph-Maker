@@ -95,7 +95,7 @@ class LineWidget extends SpriteWidget {
                 BlocProvider.of<SpritesCubit>(context).focusSprite(id: line.id);
               },
               onSecondaryTap: () {
-                BlocProvider.of<SpritesCubit>(context).removeLine(line);
+                BlocProvider.of<SpritesCubit>(context).removeEdge(line);
               },
               onPanUpdate: (position) {
                 BlocProvider.of<SpritesCubit>(context).updateBullet(

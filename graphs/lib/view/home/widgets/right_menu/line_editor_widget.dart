@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:graphs/models/line.dart';
+import 'package:graphs/models/edge.dart';
 import 'package:graphs/view/home/cubit/sprites_cubit.dart';
 import 'package:graphs/view/home/widgets/right_menu/input_field_widget.dart';
 
 class LineEditorWidget extends StatefulWidget {
   final bool isMenuOpen;
-  final Line line;
+  final Edge edge;
 
   const LineEditorWidget({
     Key? key,
     required this.isMenuOpen,
-    required this.line,
+    required this.edge,
   }) : super(key: key);
 
   @override
@@ -25,13 +25,13 @@ class _LineEditorWidgetState extends State<LineEditorWidget> {
     try {
       return double.parse(value);
     } on Exception {
-      return widget.line.weight;
+      return widget.edge.weight;
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    weightController.text = widget.line.weight.toString();
+    weightController.text = widget.edge.weight.toString();
     return Column(
       children: [
         InputFieldWidget(
@@ -44,7 +44,7 @@ class _LineEditorWidgetState extends State<LineEditorWidget> {
           FloatingActionButton.extended(
             onPressed: () {
               BlocProvider.of<SpritesCubit>(context)
-                  .editLine(widget.line, _parseString(weightController.text));
+                  .editEdge(widget.edge, _parseString(weightController.text));
             },
             backgroundColor: Colors.green,
             label: Container(
@@ -64,7 +64,7 @@ class _LineEditorWidgetState extends State<LineEditorWidget> {
         if (widget.isMenuOpen)
           FloatingActionButton.extended(
             onPressed: () {
-              BlocProvider.of<SpritesCubit>(context).removeLine(widget.line);
+              BlocProvider.of<SpritesCubit>(context).removeEdge(widget.edge);
             },
             backgroundColor: Colors.red,
             label: Container(

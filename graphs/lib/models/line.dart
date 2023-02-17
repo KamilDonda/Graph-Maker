@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:graphs/models/edge.dart';
 import 'package:graphs/models/point.dart';
 import 'package:graphs/models/position.dart';
-import 'package:graphs/models/sprite.dart';
 
-class Line extends Sprite {
+class Line extends Edge {
   late Point p1;
   late Point p2;
   late Position p3 = Position();
@@ -18,5 +18,5 @@ class Line extends Sprite {
     this.color = Colors.black,
     this.width = 2,
     this.weight = 1,
-  }) : super(x: 0, y: 0);
+  }) : super();
 }

@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:graphs/constants/sizes.dart';
+import 'package:graphs/models/edge.dart';
 import 'package:graphs/models/line.dart';
 import 'package:graphs/models/loop.dart';
 import 'package:graphs/models/point.dart';
@@ -162,12 +163,28 @@ class SpritesCubit extends Cubit<List<Sprite>> {
     emit([..._sprites]);
   }
 
-  void removeLine(Line line) {
+  void removeEdge(Edge edge) {
+    if (edge is Line) {
+      _removeLine(edge);
+    } else if (edge is Loop) {
+      _removeLoop(edge);
+    }
+  }
+
+  void _removeLine(Line line) {
     var p1 = line.p1;
     var p2 = line.p2;
     _sprites.remove(line);
     p1.neighbors_ids.remove(p2.id);
     p2.neighbors_ids.remove(p1.id);
+
+    emit([..._sprites]);
+  }
+
+  void _removeLoop(Loop loop) {
+    var p = loop.point;
+    _sprites.remove(loop);
+    p.neighbors_ids.remove(p.id);
 
     emit([..._sprites]);
   }
@@ -192,8 +209,8 @@ class SpritesCubit extends Cubit<List<Sprite>> {
     emit([..._sprites]);
   }
 
-  void editLine(Line line, double weight) {
-    line.weight = weight;
+  void editEdge(Edge edge, double weight) {
+    edge.weight = weight;
 
     emit([..._sprites]);
   }
