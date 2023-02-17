@@ -39,9 +39,10 @@ class HinterWidget extends StatelessWidget {
                   const BulletList([
                     "To select point, use Left Mouse Button on it",
                     "To connect points, first select point, then use Right Mouse Button on another point",
-                    "To delete connection, use Right Mouse Button on the bullet",
                     "When X or Y is empty, point will be placed in the center of the area",
                     "If point is selected, the new one will be placed at the same coordinates",
+                    "To delete connection, use Right Mouse Button on the weight",
+                    "To reset edge position, use Left Mouse Button on the weight twice",
                   ]),
               ],
             )),

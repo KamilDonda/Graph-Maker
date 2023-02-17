@@ -31,19 +31,19 @@ class HomePage extends StatelessWidget {
                       const Spacer(),
                       BlocBuilder<SpritesCubit, List<Sprite>>(builder: (_, __) {
                         var areVisible = BlocProvider.of<SpritesCubit>(context)
-                            .areBulletsVisible();
+                            .areWeightsVisible();
                         return ElevatedButton.icon(
                           onPressed: () {
                             BlocProvider.of<SpritesCubit>(context)
-                                .toggleBulletsVisibility();
+                                .toggleWeightsVisibility();
                           },
                           icon: Icon(areVisible
                               ? Icons.visibility_off
                               : Icons.visibility),
                           label: Text(
-                              areVisible ? "Hide bullets" : "Show bullets"),
+                              areVisible ? "Hide weights" : "Show weights"),
                           style: ElevatedButton.styleFrom(
-                              fixedSize: const Size(140, 40),
+                              fixedSize: const Size(150, 40),
                               backgroundColor: Colors.grey),
                         );
                       }),

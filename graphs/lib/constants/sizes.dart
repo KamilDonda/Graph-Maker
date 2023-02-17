@@ -8,7 +8,5 @@ const double AREA_SIZE_Y = 1080;
 
 const double DEFAULT_POINT_SIZE = 80;
 const double DEFAULT_WEIGHT_SIZE = 40;
-const double WEIGHT_DISPLACEMENT = 10;
-const double DEFAULT_BULLET_SIZE = 12;
 
 const int UNFOCUSED = -1;

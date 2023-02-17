@@ -14,9 +14,6 @@ class LineWidget extends SpriteWidget {
 
   final Line line;
 
-  final bulletSize = DEFAULT_BULLET_SIZE / 2;
-  final innerBulletSize = DEFAULT_BULLET_SIZE / 2 - 2;
-
   Positioned _drawLine(
     Position bg,
     double px,
@@ -39,10 +36,20 @@ class LineWidget extends SpriteWidget {
     );
   }
 
+  void onTapDown(BuildContext context, TapDownDetails details) {
+    int currentTime = DateTime.now().millisecondsSinceEpoch;
+    BlocProvider.of<SpritesCubit>(context).focusSprite(id: line.id);
+
+    if (currentTime - line.timestamp < 300) {
+      BlocProvider.of<SpritesCubit>(context).resetBullet(line);
+    }
+    line.timestamp = currentTime;
+  }
+
   @override
   Widget build(BuildContext context) {
     var background = BlocProvider.of<SpritesCubit>(context).background;
-    var areVisible = BlocProvider.of<SpritesCubit>(context).areBulletsVisible();
+    var areVisible = BlocProvider.of<SpritesCubit>(context).areWeightsVisible();
 
     var p1x = background.x + line.p1.x + line.p1.size / 2;
     var p1y = background.y + line.p1.y + line.p1.size / 2;
@@ -76,59 +83,42 @@ class LineWidget extends SpriteWidget {
       children: [
         _drawLine(background, p1x, p1y, c, d),
         _drawLine(background, p2x, p2y, e, f),
-        Positioned(
-          top: by - DEFAULT_BULLET_SIZE / 2 + WEIGHT_DISPLACEMENT,
-          left: bx - DEFAULT_BULLET_SIZE / 2 + WEIGHT_DISPLACEMENT,
-          child: GestureDetector(
-            onTap: () {
-              BlocProvider.of<SpritesCubit>(context).focusSprite(id: line.id);
-            },
-            child: CircleAvatar(
-              radius: DEFAULT_WEIGHT_SIZE / 2,
-              backgroundColor: Colors.black,
-              child: CircleAvatar(
-                radius: isFocused
-                    ? DEFAULT_WEIGHT_SIZE / 2 - 4
-                    : DEFAULT_WEIGHT_SIZE / 2 - 2,
-                backgroundColor: isFocused
-                    ? backgroundColor.withAlpha(230)
-                    : backgroundColor,
-                child: Text(
-                  line.weight.toString(),
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 20,
-                    fontWeight: isFocused ? FontWeight.w900 : FontWeight.w600,
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
         if (areVisible)
           Positioned(
-            top: by - DEFAULT_BULLET_SIZE / 2,
-            left: bx - DEFAULT_BULLET_SIZE / 2,
+            top: by - DEFAULT_WEIGHT_SIZE / 2,
+            left: bx - DEFAULT_WEIGHT_SIZE / 2,
             child: GestureDetector(
+              onTapDown: (details) {
+                onTapDown(context, details);
+              },
               onPanStart: (details) {
                 BlocProvider.of<SpritesCubit>(context).focusSprite(id: line.id);
               },
               onSecondaryTap: () {
                 BlocProvider.of<SpritesCubit>(context).removeLine(line);
               },
-              onTap: () {
-                BlocProvider.of<SpritesCubit>(context).resetBullet(line);
-              },
               onPanUpdate: (position) {
                 BlocProvider.of<SpritesCubit>(context).updateBullet(
                     line, position.delta.dx.toInt(), position.delta.dy.toInt());
               },
               child: CircleAvatar(
-                radius: bulletSize,
+                radius: DEFAULT_WEIGHT_SIZE / 2,
                 backgroundColor: Colors.black,
                 child: CircleAvatar(
-                  radius: innerBulletSize,
-                  backgroundColor: Colors.grey,
+                  radius: isFocused
+                      ? DEFAULT_WEIGHT_SIZE / 2 - 4
+                      : DEFAULT_WEIGHT_SIZE / 2 - 2,
+                  backgroundColor: isFocused
+                      ? backgroundColor.withAlpha(230)
+                      : backgroundColor,
+                  child: Text(
+                    line.weight.toString(),
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 20,
+                      fontWeight: isFocused ? FontWeight.w900 : FontWeight.w600,
+                    ),
+                  ),
                 ),
               ),
             ),
