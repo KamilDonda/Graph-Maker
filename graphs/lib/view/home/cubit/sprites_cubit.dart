@@ -182,7 +182,11 @@ class SpritesCubit extends Cubit<List<Sprite>> {
   }
 
   void _removeLoop(Loop loop) {
-    // TODO
+    var p = loop.point;
+    _sprites.remove(loop);
+    p.neighbors_ids.remove(p.id);
+
+    emit([..._sprites]);
   }
 
   bool _weightsVisibility = true;
