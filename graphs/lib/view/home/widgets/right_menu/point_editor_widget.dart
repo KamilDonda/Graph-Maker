@@ -4,7 +4,7 @@ import 'package:flutter_material_color_picker/flutter_material_color_picker.dart
 import 'package:graphs/constants/sizes.dart';
 import 'package:graphs/models/point.dart';
 import 'package:graphs/models/sprite.dart';
-import 'package:graphs/view/home/cubit/points_cubit.dart';
+import 'package:graphs/view/home/cubit/sprites_cubit.dart';
 import 'package:graphs/view/home/widgets/right_menu/input_field_widget.dart';
 
 class PointEditorWidget extends StatefulWidget {
@@ -78,7 +78,7 @@ class _PointEditorWidgetState extends State<PointEditorWidget> {
 
   @override
   Widget build(BuildContext context) {
-    var id = BlocProvider.of<PointsCubit>(context).getFocusedID();
+    var id = BlocProvider.of<SpritesCubit>(context).getFocusedID();
     if (widget.sprite != null) {
       if (!wasEdited) {
         var sprite = widget.sprite;
@@ -140,7 +140,7 @@ class _PointEditorWidgetState extends State<PointEditorWidget> {
         if (widget.isMenuOpen)
           FloatingActionButton.extended(
             onPressed: () {
-              BlocProvider.of<PointsCubit>(context).addPoint(Point(
+              BlocProvider.of<SpritesCubit>(context).addPoint(Point(
                   name: nameController.text,
                   x: _parseString(xController.text,
                       defaultValue: (AREA_SIZE_X - DEFAULT_POINT_SIZE) ~/ 2),
@@ -165,7 +165,7 @@ class _PointEditorWidgetState extends State<PointEditorWidget> {
         if (id != UNFOCUSED && widget.isMenuOpen)
           FloatingActionButton.extended(
             onPressed: () {
-              BlocProvider.of<PointsCubit>(context).editPoint(
+              BlocProvider.of<SpritesCubit>(context).editPoint(
                 id,
                 nameController.text,
                 _parseString(xController.text),
@@ -191,7 +191,7 @@ class _PointEditorWidgetState extends State<PointEditorWidget> {
         if (id != UNFOCUSED && widget.isMenuOpen)
           FloatingActionButton.extended(
             onPressed: () {
-              BlocProvider.of<PointsCubit>(context).deletePoint(id);
+              BlocProvider.of<SpritesCubit>(context).deletePoint(id);
             },
             backgroundColor: Colors.red,
             label: Container(

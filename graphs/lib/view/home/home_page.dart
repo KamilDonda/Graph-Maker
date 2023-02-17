@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:graphs/constants/sizes.dart';
 import 'package:graphs/models/sprite.dart';
-import 'package:graphs/view/home/cubit/points_cubit.dart';
 import 'package:graphs/view/home/cubit/right_menu/hinter_cubit.dart';
 import 'package:graphs/view/home/cubit/right_menu/right_menu_cubit.dart';
+import 'package:graphs/view/home/cubit/sprites_cubit.dart';
 import 'package:graphs/view/home/widgets/graph_area_widget.dart';
 import 'package:graphs/view/home/widgets/right_menu/right_menu_widget.dart';
 
@@ -29,13 +29,12 @@ class HomePage extends StatelessWidget {
                         style: TextStyle(fontSize: 30),
                       ),
                       const Spacer(),
-                      BlocBuilder<PointsCubit, List<Sprite>>(
-                          builder: (context, snapshot) {
-                        var areVisible = BlocProvider.of<PointsCubit>(context)
+                      BlocBuilder<SpritesCubit, List<Sprite>>(builder: (_, __) {
+                        var areVisible = BlocProvider.of<SpritesCubit>(context)
                             .areBulletsVisible();
                         return ElevatedButton.icon(
                           onPressed: () {
-                            BlocProvider.of<PointsCubit>(context)
+                            BlocProvider.of<SpritesCubit>(context)
                                 .toggleBulletsVisibility();
                           },
                           icon: Icon(areVisible
@@ -51,7 +50,7 @@ class HomePage extends StatelessWidget {
                       const SizedBox(width: 10),
                       ElevatedButton.icon(
                         onPressed: () {
-                          BlocProvider.of<PointsCubit>(context).clearAll();
+                          BlocProvider.of<SpritesCubit>(context).clearAll();
                         },
                         icon: const Icon(Icons.clear),
                         label: const Text("Clear all"),

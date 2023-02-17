@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:graphs/constants/sizes.dart';
 import 'package:graphs/models/line.dart';
 import 'package:graphs/models/sprite.dart';
-import 'package:graphs/view/home/cubit/points_cubit.dart';
 import 'package:graphs/view/home/cubit/right_menu/right_menu_cubit.dart';
+import 'package:graphs/view/home/cubit/sprites_cubit.dart';
 import 'package:graphs/view/home/widgets/right_menu/hinter_widget.dart';
 import 'package:graphs/view/home/widgets/right_menu/point_editor_widget.dart';
 
@@ -28,9 +28,10 @@ class RightMenuWidget extends StatelessWidget {
           children: [
             Container(
               padding: const EdgeInsets.all(10),
-              child: BlocBuilder<PointsCubit, List<Sprite>>(
+              child: BlocBuilder<SpritesCubit, List<Sprite>>(
                 builder: (_, points) {
-                  var id = BlocProvider.of<PointsCubit>(context).getFocusedID();
+                  var id =
+                      BlocProvider.of<SpritesCubit>(context).getFocusedID();
                   Sprite? sprite = getSprite(points, id);
                   return Column(
                     children: [

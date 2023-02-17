@@ -6,7 +6,7 @@ import 'package:graphs/constants/colors.dart';
 import 'package:graphs/constants/sizes.dart';
 import 'package:graphs/models/line.dart';
 import 'package:graphs/models/position.dart';
-import 'package:graphs/view/home/cubit/points_cubit.dart';
+import 'package:graphs/view/home/cubit/sprites_cubit.dart';
 import 'package:graphs/view/home/widgets/sprite_widget.dart';
 
 class LineWidget extends SpriteWidget {
@@ -41,8 +41,8 @@ class LineWidget extends SpriteWidget {
 
   @override
   Widget build(BuildContext context) {
-    var background = BlocProvider.of<PointsCubit>(context).background;
-    var areVisible = BlocProvider.of<PointsCubit>(context).areBulletsVisible();
+    var background = BlocProvider.of<SpritesCubit>(context).background;
+    var areVisible = BlocProvider.of<SpritesCubit>(context).areBulletsVisible();
 
     var p1x = background.x + line.p1.x + line.p1.size / 2;
     var p1y = background.y + line.p1.y + line.p1.size / 2;
@@ -79,13 +79,13 @@ class LineWidget extends SpriteWidget {
             left: bx - DEFAULT_BULLET_SIZE / 2,
             child: GestureDetector(
               onSecondaryTap: () {
-                BlocProvider.of<PointsCubit>(context).removeLine(line);
+                BlocProvider.of<SpritesCubit>(context).removeLine(line);
               },
               onTap: () {
-                BlocProvider.of<PointsCubit>(context).resetBullet(line);
+                BlocProvider.of<SpritesCubit>(context).resetBullet(line);
               },
               onPanUpdate: (position) {
-                BlocProvider.of<PointsCubit>(context).updateBullet(
+                BlocProvider.of<SpritesCubit>(context).updateBullet(
                     line, position.delta.dx.toInt(), position.delta.dy.toInt());
               },
               child: CircleAvatar(
@@ -103,7 +103,7 @@ class LineWidget extends SpriteWidget {
           left: bx - DEFAULT_BULLET_SIZE / 2 + WEIGHT_DISPLACEMENT,
           child: GestureDetector(
             onTap: () {
-              BlocProvider.of<PointsCubit>(context).focusSprite(id: line.id);
+              BlocProvider.of<SpritesCubit>(context).focusSprite(id: line.id);
             },
             child: CircleAvatar(
               radius: DEFAULT_WEIGHT_SIZE / 2,

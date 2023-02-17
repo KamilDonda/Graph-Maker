@@ -10,8 +10,8 @@ import 'package:graphs/models/point.dart';
 import 'package:graphs/models/position.dart';
 import 'package:graphs/models/sprite.dart';
 
-class PointsCubit extends Cubit<List<Sprite>> {
-  PointsCubit() : super([]);
+class SpritesCubit extends Cubit<List<Sprite>> {
+  SpritesCubit() : super([]);
 
   Position background = Position();
 
@@ -113,7 +113,7 @@ class PointsCubit extends Cubit<List<Sprite>> {
     emit([..._sprites]);
   }
 
-  void getPoints() => emit(_sprites);
+  void getSprites() => emit(_sprites);
 
   int _focusedID = UNFOCUSED;
 
