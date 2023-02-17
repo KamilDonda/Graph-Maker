@@ -6,6 +6,7 @@ import 'package:graphs/models/sprite.dart';
 import 'package:graphs/view/home/cubit/right_menu/right_menu_cubit.dart';
 import 'package:graphs/view/home/cubit/sprites_cubit.dart';
 import 'package:graphs/view/home/widgets/right_menu/hinter_widget.dart';
+import 'package:graphs/view/home/widgets/right_menu/line_editor_widget.dart';
 import 'package:graphs/view/home/widgets/right_menu/point_editor_widget.dart';
 
 class RightMenuWidget extends StatelessWidget {
@@ -41,10 +42,12 @@ class RightMenuWidget extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             isMenuOpen
-                                ? const Expanded(
+                                ? Expanded(
                                     child: Text(
-                                    "Edit point",
-                                    style: TextStyle(fontSize: 30),
+                                    (sprite is Line)
+                                        ? "Edit edge"
+                                        : "Edit vertex",
+                                    style: const TextStyle(fontSize: 30),
                                   ))
                                 : const SizedBox(),
                             IconButton(
@@ -61,7 +64,8 @@ class RightMenuWidget extends StatelessWidget {
                         ),
                       ),
                       (sprite is Line)
-                          ? const Text("Line", style: TextStyle(fontSize: 20))
+                          ? LineEditorWidget(
+                              isMenuOpen: isMenuOpen, line: sprite)
                           : PointEditorWidget(
                               isMenuOpen: isMenuOpen, sprite: sprite),
                     ],

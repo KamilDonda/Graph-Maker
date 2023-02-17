@@ -154,9 +154,9 @@ class _PointEditorWidgetState extends State<PointEditorWidget> {
               alignment: Alignment.center,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: const [
-                  Text("Add new point"),
-                  Icon(Icons.add),
+                children: [
+                  Text(id == UNFOCUSED ? "Add new point" : "Copy this point"),
+                  const Icon(Icons.add),
                 ],
               ),
             ),
@@ -181,8 +181,8 @@ class _PointEditorWidgetState extends State<PointEditorWidget> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: const [
-                  Text("Edit this point"),
-                  Icon(Icons.edit),
+                  Text("Save this point"),
+                  Icon(Icons.done),
                 ],
               ),
             ),

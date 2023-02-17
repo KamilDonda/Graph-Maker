@@ -189,6 +189,13 @@ class SpritesCubit extends Cubit<List<Sprite>> {
 
   void resetBullet(Line line) {
     line.p3.reset();
+    _focusedID = UNFOCUSED;
+    emit([..._sprites]);
+  }
+
+  void editLine(Line line, double weight) {
+    line.weight = weight;
+
     emit([..._sprites]);
   }
 }

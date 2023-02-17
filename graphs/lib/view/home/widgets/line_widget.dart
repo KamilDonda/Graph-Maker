@@ -69,6 +69,9 @@ class LineWidget extends SpriteWidget {
       p2y = by;
     }
 
+    bool isFocused =
+        BlocProvider.of<SpritesCubit>(context).getFocusedID() == line.id;
+
     return Stack(
       children: [
         _drawLine(background, p1x, p1y, c, d),
@@ -84,14 +87,18 @@ class LineWidget extends SpriteWidget {
               radius: DEFAULT_WEIGHT_SIZE / 2,
               backgroundColor: Colors.black,
               child: CircleAvatar(
-                radius: DEFAULT_WEIGHT_SIZE / 2 - 2,
-                backgroundColor: backgroundColor,
+                radius: isFocused
+                    ? DEFAULT_WEIGHT_SIZE / 2 - 4
+                    : DEFAULT_WEIGHT_SIZE / 2 - 2,
+                backgroundColor: isFocused
+                    ? backgroundColor.withAlpha(230)
+                    : backgroundColor,
                 child: Text(
                   line.weight.toString(),
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: Colors.black,
                     fontSize: 20,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: isFocused ? FontWeight.w900 : FontWeight.w600,
                   ),
                 ),
               ),
@@ -103,6 +110,9 @@ class LineWidget extends SpriteWidget {
             top: by - DEFAULT_BULLET_SIZE / 2,
             left: bx - DEFAULT_BULLET_SIZE / 2,
             child: GestureDetector(
+              onPanStart: (details) {
+                BlocProvider.of<SpritesCubit>(context).focusSprite(id: line.id);
+              },
               onSecondaryTap: () {
                 BlocProvider.of<SpritesCubit>(context).removeLine(line);
               },
