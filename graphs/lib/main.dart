@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:graphs/view/home/cubit/directed_graph_cubit.dart';
 import 'package:graphs/view/home/cubit/sprites_cubit.dart';
 import 'package:graphs/view/home/home_page.dart';
 
@@ -17,8 +18,11 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        home: BlocProvider(
-          create: (_) => SpritesCubit()..getSprites(),
+        home: MultiBlocProvider(
+          providers: [
+            BlocProvider(create: (_) => SpritesCubit()..getSprites()),
+            BlocProvider(create: (_) => DirectedGraphCubit()),
+          ],
           child: const HomePage(),
         ));
   }

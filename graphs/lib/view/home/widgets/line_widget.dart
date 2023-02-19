@@ -6,6 +6,7 @@ import 'package:graphs/constants/colors.dart';
 import 'package:graphs/constants/sizes.dart';
 import 'package:graphs/models/line.dart';
 import 'package:graphs/models/position.dart';
+import 'package:graphs/view/home/cubit/directed_graph_cubit.dart';
 import 'package:graphs/view/home/cubit/sprites_cubit.dart';
 import 'package:graphs/view/home/widgets/sprite_widget.dart';
 import 'package:graphs/widgets/draw_triangle.dart';
@@ -125,37 +126,42 @@ class LineWidget extends SpriteWidget {
         BlocProvider.of<SpritesCubit>(context).updateBullet(
             line, position.delta.dx.toInt(), position.delta.dy.toInt());
       },
-      child: Stack(
-        children: [
-          _drawLine(background, p1x, p1y, c, d),
-          _drawLine(background, p2x, p2y, e, f),
-          _drawArrow(background, bx, by),
-          if (areVisible)
-            Positioned(
-              top: by - DEFAULT_WEIGHT_SIZE / 2,
-              left: bx - DEFAULT_WEIGHT_SIZE / 2,
-              child: CircleAvatar(
-                radius: DEFAULT_WEIGHT_SIZE / 2,
-                backgroundColor: Colors.black,
-                child: CircleAvatar(
-                  radius: isFocused
-                      ? DEFAULT_WEIGHT_SIZE / 2 - 4
-                      : DEFAULT_WEIGHT_SIZE / 2 - 2,
-                  backgroundColor: isFocused
-                      ? backgroundColor.withAlpha(230)
-                      : backgroundColor,
-                  child: Text(
-                    line.weight.toString(),
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 20,
-                      fontWeight: isFocused ? FontWeight.w900 : FontWeight.w600,
+      child: BlocBuilder<DirectedGraphCubit, bool>(
+        builder: (_, isGraphDirected) {
+          return Stack(
+            children: [
+              _drawLine(background, p1x, p1y, c, d),
+              _drawLine(background, p2x, p2y, e, f),
+              if (isGraphDirected) _drawArrow(background, bx, by),
+              if (areVisible)
+                Positioned(
+                  top: by - DEFAULT_WEIGHT_SIZE / 2,
+                  left: bx - DEFAULT_WEIGHT_SIZE / 2,
+                  child: CircleAvatar(
+                    radius: DEFAULT_WEIGHT_SIZE / 2,
+                    backgroundColor: Colors.black,
+                    child: CircleAvatar(
+                      radius: isFocused
+                          ? DEFAULT_WEIGHT_SIZE / 2 - 4
+                          : DEFAULT_WEIGHT_SIZE / 2 - 2,
+                      backgroundColor: isFocused
+                          ? backgroundColor.withAlpha(230)
+                          : backgroundColor,
+                      child: Text(
+                        line.weight.toString(),
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 20,
+                          fontWeight:
+                              isFocused ? FontWeight.w900 : FontWeight.w600,
+                        ),
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ),
-        ],
+            ],
+          );
+        },
       ),
     );
   }

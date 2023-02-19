@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:graphs/constants/sizes.dart';
 import 'package:graphs/models/sprite.dart';
+import 'package:graphs/view/home/cubit/directed_graph_cubit.dart';
 import 'package:graphs/view/home/cubit/right_menu/hinter_cubit.dart';
 import 'package:graphs/view/home/cubit/right_menu/right_menu_cubit.dart';
 import 'package:graphs/view/home/cubit/sprites_cubit.dart';
@@ -29,6 +30,24 @@ class HomePage extends StatelessWidget {
                         style: TextStyle(fontSize: 30),
                       ),
                       const Spacer(),
+                      BlocBuilder<DirectedGraphCubit, bool>(
+                          builder: (_, isGraphDirected) {
+                        return ElevatedButton.icon(
+                          onPressed: () {
+                            BlocProvider.of<DirectedGraphCubit>(context)
+                                .toggleDirectedGraph();
+                          },
+                          icon: Icon(isGraphDirected
+                              ? Icons.visibility_off
+                              : Icons.visibility),
+                          label: Text(
+                              isGraphDirected ? "Hide arrows" : "Show arrows"),
+                          style: ElevatedButton.styleFrom(
+                              fixedSize: const Size(150, 40),
+                              backgroundColor: Colors.grey),
+                        );
+                      }),
+                      const SizedBox(width: 10),
                       BlocBuilder<SpritesCubit, List<Sprite>>(builder: (_, __) {
                         var areVisible = BlocProvider.of<SpritesCubit>(context)
                             .areWeightsVisible();
