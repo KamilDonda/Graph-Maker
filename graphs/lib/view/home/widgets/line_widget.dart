@@ -8,6 +8,7 @@ import 'package:graphs/models/line.dart';
 import 'package:graphs/models/position.dart';
 import 'package:graphs/view/home/cubit/sprites_cubit.dart';
 import 'package:graphs/view/home/widgets/sprite_widget.dart';
+import 'package:graphs/widgets/draw_triangle.dart';
 
 class LineWidget extends SpriteWidget {
   const LineWidget({super.key, required this.line}) : super();
@@ -48,22 +49,21 @@ class LineWidget extends SpriteWidget {
     var b = px - bx;
 
     var radians = math.atan(a / b);
-    var dist = math.sqrt(a * a + b * b) - DEFAULT_POINT_SIZE;
-    var n = 1;
+    var dist = math.sqrt(a * a + b * b) - (DEFAULT_POINT_SIZE + ARROW_SIZE) / 2;
 
-    if (bx <= px) {
-      n = -1;
-    }
-
+    var n = bx <= px ? -1 : 1;
     var xx = bx - (dist * math.cos(radians)) * n;
     var yy = by - (dist * math.sin(radians)) * n;
+
+    var rotation = by <= py ? math.pi - math.atan(b / a) : -math.atan(b / a);
 
     return Positioned(
       top: yy - ARROW_SIZE / 2,
       left: xx - ARROW_SIZE / 2,
-      child: const CircleAvatar(
-        radius: ARROW_SIZE / 2,
-        backgroundColor: Colors.black,
+      child: Transform.rotate(
+        angle: rotation,
+        child: CustomPaint(
+            size: const Size(ARROW_SIZE, ARROW_SIZE), painter: DrawTriangle()),
       ),
     );
   }
@@ -111,29 +111,29 @@ class LineWidget extends SpriteWidget {
     bool isFocused =
         BlocProvider.of<SpritesCubit>(context).getFocusedID() == line.id;
 
-    return Stack(
-      children: [
-        _drawLine(background, p1x, p1y, c, d),
-        _drawLine(background, p2x, p2y, e, f),
-        _drawArrow(background, bx, by),
-        if (areVisible)
-          Positioned(
-            top: by - DEFAULT_WEIGHT_SIZE / 2,
-            left: bx - DEFAULT_WEIGHT_SIZE / 2,
-            child: GestureDetector(
-              onTapDown: (details) {
-                onTapDown(context, details);
-              },
-              onPanStart: (details) {
-                BlocProvider.of<SpritesCubit>(context).focusSprite(id: line.id);
-              },
-              onSecondaryTap: () {
-                BlocProvider.of<SpritesCubit>(context).removeEdge(line);
-              },
-              onPanUpdate: (position) {
-                BlocProvider.of<SpritesCubit>(context).updateBullet(
-                    line, position.delta.dx.toInt(), position.delta.dy.toInt());
-              },
+    return GestureDetector(
+      onTapDown: (details) {
+        onTapDown(context, details);
+      },
+      onPanStart: (details) {
+        BlocProvider.of<SpritesCubit>(context).focusSprite(id: line.id);
+      },
+      onSecondaryTap: () {
+        BlocProvider.of<SpritesCubit>(context).removeEdge(line);
+      },
+      onPanUpdate: (position) {
+        BlocProvider.of<SpritesCubit>(context).updateBullet(
+            line, position.delta.dx.toInt(), position.delta.dy.toInt());
+      },
+      child: Stack(
+        children: [
+          _drawLine(background, p1x, p1y, c, d),
+          _drawLine(background, p2x, p2y, e, f),
+          _drawArrow(background, bx, by),
+          if (areVisible)
+            Positioned(
+              top: by - DEFAULT_WEIGHT_SIZE / 2,
+              left: bx - DEFAULT_WEIGHT_SIZE / 2,
               child: CircleAvatar(
                 radius: DEFAULT_WEIGHT_SIZE / 2,
                 backgroundColor: Colors.black,
@@ -155,8 +155,8 @@ class LineWidget extends SpriteWidget {
                 ),
               ),
             ),
-          ),
-      ],
+        ],
+      ),
     );
   }
 }
