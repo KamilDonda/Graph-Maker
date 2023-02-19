@@ -36,6 +36,38 @@ class LineWidget extends SpriteWidget {
     );
   }
 
+  Positioned _drawArrow(
+    Position bg,
+    double bx,
+    double by,
+  ) {
+    var px = bg.x + line.p2.x + line.p2.size / 2;
+    var py = bg.y + line.p2.y + line.p2.size / 2;
+
+    var a = py - by;
+    var b = px - bx;
+
+    var radians = math.atan(a / b);
+    var dist = math.sqrt(a * a + b * b) - DEFAULT_POINT_SIZE;
+    var n = 1;
+
+    if (bx <= px) {
+      n = -1;
+    }
+
+    var xx = bx - (dist * math.cos(radians)) * n;
+    var yy = by - (dist * math.sin(radians)) * n;
+
+    return Positioned(
+      top: yy - ARROW_SIZE / 2,
+      left: xx - ARROW_SIZE / 2,
+      child: const CircleAvatar(
+        radius: ARROW_SIZE / 2,
+        backgroundColor: Colors.black,
+      ),
+    );
+  }
+
   void onTapDown(BuildContext context, TapDownDetails details) {
     int currentTime = DateTime.now().millisecondsSinceEpoch;
     BlocProvider.of<SpritesCubit>(context).focusSprite(id: line.id);
@@ -83,6 +115,7 @@ class LineWidget extends SpriteWidget {
       children: [
         _drawLine(background, p1x, p1y, c, d),
         _drawLine(background, p2x, p2y, e, f),
+        _drawArrow(background, bx, by),
         if (areVisible)
           Positioned(
             top: by - DEFAULT_WEIGHT_SIZE / 2,
