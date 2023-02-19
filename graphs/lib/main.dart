@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:graphs/view/home/cubit/directed_graph_cubit.dart';
 import 'package:graphs/view/home/cubit/sprites_cubit.dart';
+import 'package:graphs/view/home/cubit/weight_visibility_cubit.dart';
 import 'package:graphs/view/home/home_page.dart';
 
 void main() {
@@ -22,6 +23,7 @@ class MyApp extends StatelessWidget {
           providers: [
             BlocProvider(create: (_) => SpritesCubit()..getSprites()),
             BlocProvider(create: (_) => DirectedGraphCubit()),
+            BlocProvider(create: (_) => WeightVisibilityCubit()),
           ],
           child: const HomePage(),
         ));

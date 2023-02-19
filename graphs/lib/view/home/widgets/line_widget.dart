@@ -8,6 +8,7 @@ import 'package:graphs/models/line.dart';
 import 'package:graphs/models/position.dart';
 import 'package:graphs/view/home/cubit/directed_graph_cubit.dart';
 import 'package:graphs/view/home/cubit/sprites_cubit.dart';
+import 'package:graphs/view/home/cubit/weight_visibility_cubit.dart';
 import 'package:graphs/view/home/widgets/sprite_widget.dart';
 import 'package:graphs/widgets/draw_triangle.dart';
 
@@ -69,6 +70,32 @@ class LineWidget extends SpriteWidget {
     );
   }
 
+  Positioned _weight(double bx, double by, bool isFocused) {
+    return Positioned(
+      top: by - DEFAULT_WEIGHT_SIZE / 2,
+      left: bx - DEFAULT_WEIGHT_SIZE / 2,
+      child: CircleAvatar(
+        radius: DEFAULT_WEIGHT_SIZE / 2,
+        backgroundColor: Colors.black,
+        child: CircleAvatar(
+          radius: isFocused
+              ? DEFAULT_WEIGHT_SIZE / 2 - 4
+              : DEFAULT_WEIGHT_SIZE / 2 - 2,
+          backgroundColor:
+              isFocused ? backgroundColor.withAlpha(230) : backgroundColor,
+          child: Text(
+            line.weight.toString(),
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 20,
+              fontWeight: isFocused ? FontWeight.w900 : FontWeight.w600,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   void onTapDown(BuildContext context, TapDownDetails details) {
     int currentTime = DateTime.now().millisecondsSinceEpoch;
     BlocProvider.of<SpritesCubit>(context).focusSprite(id: line.id);
@@ -82,7 +109,6 @@ class LineWidget extends SpriteWidget {
   @override
   Widget build(BuildContext context) {
     var background = BlocProvider.of<SpritesCubit>(context).background;
-    var areVisible = BlocProvider.of<SpritesCubit>(context).areWeightsVisible();
 
     var p1x = background.x + line.p1.x + line.p1.size / 2;
     var p1y = background.y + line.p1.y + line.p1.size / 2;
@@ -126,42 +152,23 @@ class LineWidget extends SpriteWidget {
         BlocProvider.of<SpritesCubit>(context).updateBullet(
             line, position.delta.dx.toInt(), position.delta.dy.toInt());
       },
-      child: BlocBuilder<DirectedGraphCubit, bool>(
-        builder: (_, isGraphDirected) {
-          return Stack(
-            children: [
-              _drawLine(background, p1x, p1y, c, d),
-              _drawLine(background, p2x, p2y, e, f),
-              if (isGraphDirected) _drawArrow(background, bx, by),
-              if (areVisible)
-                Positioned(
-                  top: by - DEFAULT_WEIGHT_SIZE / 2,
-                  left: bx - DEFAULT_WEIGHT_SIZE / 2,
-                  child: CircleAvatar(
-                    radius: DEFAULT_WEIGHT_SIZE / 2,
-                    backgroundColor: Colors.black,
-                    child: CircleAvatar(
-                      radius: isFocused
-                          ? DEFAULT_WEIGHT_SIZE / 2 - 4
-                          : DEFAULT_WEIGHT_SIZE / 2 - 2,
-                      backgroundColor: isFocused
-                          ? backgroundColor.withAlpha(230)
-                          : backgroundColor,
-                      child: Text(
-                        line.weight.toString(),
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 20,
-                          fontWeight:
-                              isFocused ? FontWeight.w900 : FontWeight.w600,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-            ],
-          );
-        },
+      child: Stack(
+        children: [
+          _drawLine(background, p1x, p1y, c, d),
+          _drawLine(background, p2x, p2y, e, f),
+          BlocBuilder<DirectedGraphCubit, bool>(builder: (_, isGraphDirected) {
+            return isGraphDirected
+                ? _drawArrow(background, bx, by)
+                : Container();
+          }),
+          BlocBuilder<WeightVisibilityCubit, bool>(
+            builder: (_, areWeightsVisible) {
+              return areWeightsVisible
+                  ? _weight(bx, by, isFocused)
+                  : Container();
+            },
+          ),
+        ],
       ),
     );
   }

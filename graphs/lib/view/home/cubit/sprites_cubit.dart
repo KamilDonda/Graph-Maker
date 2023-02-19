@@ -189,15 +189,6 @@ class SpritesCubit extends Cubit<List<Sprite>> {
     emit([..._sprites]);
   }
 
-  bool _weightsVisibility = true;
-
-  bool areWeightsVisible() => _weightsVisibility;
-
-  void toggleWeightsVisibility() {
-    _weightsVisibility = !_weightsVisibility;
-    emit([..._sprites]);
-  }
-
   void updateBullet(Line line, dx, dy) {
     line.p3.move(dx: dx, dy: dy);
     emit([..._sprites]);

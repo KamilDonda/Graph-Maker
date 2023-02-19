@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:graphs/constants/sizes.dart';
-import 'package:graphs/models/sprite.dart';
 import 'package:graphs/view/home/cubit/directed_graph_cubit.dart';
 import 'package:graphs/view/home/cubit/right_menu/hinter_cubit.dart';
 import 'package:graphs/view/home/cubit/right_menu/right_menu_cubit.dart';
 import 'package:graphs/view/home/cubit/sprites_cubit.dart';
 import 'package:graphs/view/home/widgets/graph_area_widget.dart';
 import 'package:graphs/view/home/widgets/right_menu/right_menu_widget.dart';
+
+import 'cubit/weight_visibility_cubit.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -48,24 +49,25 @@ class HomePage extends StatelessWidget {
                         );
                       }),
                       const SizedBox(width: 10),
-                      BlocBuilder<SpritesCubit, List<Sprite>>(builder: (_, __) {
-                        var areVisible = BlocProvider.of<SpritesCubit>(context)
-                            .areWeightsVisible();
-                        return ElevatedButton.icon(
-                          onPressed: () {
-                            BlocProvider.of<SpritesCubit>(context)
-                                .toggleWeightsVisibility();
-                          },
-                          icon: Icon(areVisible
-                              ? Icons.visibility_off
-                              : Icons.visibility),
-                          label: Text(
-                              areVisible ? "Hide weights" : "Show weights"),
-                          style: ElevatedButton.styleFrom(
-                              fixedSize: const Size(150, 40),
-                              backgroundColor: Colors.grey),
-                        );
-                      }),
+                      BlocBuilder<WeightVisibilityCubit, bool>(
+                        builder: (_, areWeightsVisible) {
+                          return ElevatedButton.icon(
+                            onPressed: () {
+                              BlocProvider.of<WeightVisibilityCubit>(context)
+                                  .toggleWeightsVisibility();
+                            },
+                            icon: Icon(areWeightsVisible
+                                ? Icons.visibility_off
+                                : Icons.visibility),
+                            label: Text(areWeightsVisible
+                                ? "Hide weights"
+                                : "Show weights"),
+                            style: ElevatedButton.styleFrom(
+                                fixedSize: const Size(150, 40),
+                                backgroundColor: Colors.grey),
+                          );
+                        },
+                      ),
                       const SizedBox(width: 10),
                       ElevatedButton.icon(
                         onPressed: () {
