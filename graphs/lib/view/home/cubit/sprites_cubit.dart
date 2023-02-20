@@ -44,6 +44,13 @@ class SpritesCubit extends Cubit<List<Sprite>> {
     emitSprites();
   }
 
+  void resetSprite() {
+    focusSprite();
+    var dx = -background.x;
+    var dy = -background.y;
+    updateSprite(dx, dy);
+  }
+
   void updateSprite(int dx, int dy) {
     var x = background.x + dx;
     var y = background.y + dy;

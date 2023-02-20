@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
             BlocProvider(create: (_) => DirectedGraphCubit()),
             BlocProvider(create: (_) => WeightVisibilityCubit()),
           ],
-          child: const HomePage(),
+          child: HomePage(),
         ));
   }
 }
