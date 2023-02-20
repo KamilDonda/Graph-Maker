@@ -6,9 +6,9 @@ import 'package:graphs/constants/colors.dart';
 import 'package:graphs/constants/sizes.dart';
 import 'package:graphs/models/line.dart';
 import 'package:graphs/models/position.dart';
-import 'package:graphs/view/home/cubit/directed_graph_cubit.dart';
 import 'package:graphs/view/home/cubit/sprites_cubit.dart';
-import 'package:graphs/view/home/cubit/weight_visibility_cubit.dart';
+import 'package:graphs/view/home/cubit/visibility/directed_graph_cubit.dart';
+import 'package:graphs/view/home/cubit/visibility/weight_visibility_cubit.dart';
 import 'package:graphs/view/home/widgets/sprite_widget.dart';
 import 'package:graphs/widgets/draw_triangle.dart';
 

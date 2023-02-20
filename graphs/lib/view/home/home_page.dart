@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:graphs/constants/sizes.dart';
-import 'package:graphs/view/home/cubit/directed_graph_cubit.dart';
 import 'package:graphs/view/home/cubit/right_menu/hinter_cubit.dart';
 import 'package:graphs/view/home/cubit/right_menu/right_menu_cubit.dart';
 import 'package:graphs/view/home/cubit/sprites_cubit.dart';
+import 'package:graphs/view/home/cubit/visibility/directed_graph_cubit.dart';
 import 'package:graphs/view/home/widgets/graph_area_widget.dart';
 import 'package:graphs/view/home/widgets/right_menu/right_menu_widget.dart';
 
-import 'cubit/weight_visibility_cubit.dart';
+import 'cubit/visibility/weight_visibility_cubit.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
