@@ -16,15 +16,19 @@ class SpritesCubit extends Cubit<List<Sprite>> {
 
   Position background = Position();
 
-  final List<Sprite> _sprites = [
+  final List<Point> _points = [
     Point(name: "", x: 600, y: 100, color: Colors.blue),
     Point(name: "", x: 300, y: 400, color: Colors.blue),
     Point(name: "", x: 600, y: 700, color: Colors.blue),
     Point(name: "", x: 900, y: 400, color: Colors.blue),
   ];
+  final List<Line> _lines = [];
+  final List<Loop> _loops = [];
+
+  void emitSprites() => emit([..._lines, ..._loops, ..._points]);
 
   void updatePoint(int dx, int dy, int id) {
-    var point = _sprites.firstWhere((s) => s.id == id) as Point;
+    var point = _points.firstWhere((s) => s.id == id);
 
     var x = point.x + dx;
     var y = point.y + dy;
@@ -37,7 +41,7 @@ class SpritesCubit extends Cubit<List<Sprite>> {
     point.x = x;
     point.y = y;
 
-    emit([..._sprites]);
+    emitSprites();
   }
 
   void updateSprite(int dx, int dy) {
@@ -56,12 +60,12 @@ class SpritesCubit extends Cubit<List<Sprite>> {
 
     background.move(dx: dx, dy: dy);
 
-    emit([..._sprites]);
+    emitSprites();
   }
 
   void addPoint(Point point) {
-    _sprites.add(point);
-    emit([..._sprites]);
+    _points.add(point);
+    emitSprites();
   }
 
   void editPoint(Point point, String name, int x, int y, Color color) {
@@ -72,48 +76,52 @@ class SpritesCubit extends Cubit<List<Sprite>> {
     point.y = y;
     point.color = color;
 
-    emit([..._sprites]);
+    emitSprites();
   }
 
   void deletePoint(int id) {
-    int index = _sprites.indexOf(_sprites.firstWhere((e) => e.id == id));
+    int index = _points.indexOf(_points.firstWhere((e) => e.id == id));
     _focusedID = UNFOCUSED;
 
     // Here we remove selected point:
-    _sprites.removeAt(index);
+    _points.removeAt(index);
 
     // Then we remove all lines that are connected to this point, so
     // we create a list of ids of that lines:
     List<int> ids = [];
-    for (int i = 0; i < _sprites.length; i++) {
-      var sprite = _sprites[i];
-      if (sprite is Line) {
-        if (sprite.p1.id == id || sprite.p2.id == id) {
-          ids.add(sprite.id);
-        }
-      } else if (sprite is Loop) {
-        if (sprite.point.id == id) {
-          ids.add(sprite.id);
-        }
-      } else if (sprite is Point) {
-        sprite.neighbors_ids.removeWhere((neighbourId) => neighbourId == id);
+
+    for (var line in _lines) {
+      if (line.p1.id == id || line.p2.id == id) {
+        ids.add(line.id);
       }
     }
-    // Now we remove lines by their ids:
-    for (var id in ids) {
-      _sprites.removeWhere((e) => e.id == id);
+
+    for (var loop in _loops) {
+      if (loop.point.id == id) {
+        ids.add(loop.id);
+      }
     }
 
-    emit([..._sprites]);
+    // Now we remove lines by their ids:
+    for (var id in ids) {
+      _lines.removeWhere((e) => e.id == id);
+      _loops.removeWhere((e) => e.id == id);
+    }
+
+    emitSprites();
   }
 
   void clearAll() {
     _focusedID = UNFOCUSED;
-    _sprites.clear();
-    emit([..._sprites]);
+
+    _points.clear();
+    _loops.clear();
+    _lines.clear();
+
+    emitSprites();
   }
 
-  void getSprites() => emit(_sprites);
+  void getSprites() => emitSprites();
 
   int _focusedID = UNFOCUSED;
 
@@ -121,7 +129,7 @@ class SpritesCubit extends Cubit<List<Sprite>> {
 
   void focusSprite({int id = UNFOCUSED}) {
     _focusedID = id;
-    emit([..._sprites]);
+    emitSprites();
   }
 
   void addLine(int id) {
@@ -130,37 +138,31 @@ class SpritesCubit extends Cubit<List<Sprite>> {
         print("No point selected");
       }
     } else if (id == _focusedID) {
-      var p1 = _sprites.firstWhere((e) => e.id == _focusedID) as Point;
+      var p1 = _points.firstWhere((e) => e.id == _focusedID);
       if (kDebugMode) {
         print("Same point: $_focusedID");
       }
-      p1.neighbors_ids.add(p1.id);
-      _sprites.insert(0, Loop(point: p1));
+      _loops.add(Loop(point: p1));
     } else {
-      var p1 = _sprites.firstWhere((e) => e.id == _focusedID) as Point;
-      var p2 = _sprites.firstWhere((e) => e.id == id) as Point;
-
-      p1.neighbors_ids.add(p2.id);
-      p2.neighbors_ids.add(p1.id);
+      var p1 = _points.firstWhere((e) => e.id == _focusedID);
+      var p2 = _points.firstWhere((e) => e.id == id);
 
       var line = Line(p1: p1, p2: p2);
-      _sprites.insert(0, line);
+      _lines.add(line);
     }
 
     _focusedID = id;
-    emit([..._sprites]);
+    emitSprites();
   }
 
   void rotateLoop(Point point) {
-    for (var sprite in _sprites) {
-      if (sprite is Loop) {
-        if (sprite.point.id == point.id) {
-          sprite.click();
-        }
+    for (var loop in _loops) {
+      if (loop.point.id == point.id) {
+        loop.click();
       }
     }
 
-    emit([..._sprites]);
+    emitSprites();
   }
 
   void removeEdge(Edge edge) {
@@ -174,35 +176,32 @@ class SpritesCubit extends Cubit<List<Sprite>> {
   void _removeLine(Line line) {
     var p1 = line.p1;
     var p2 = line.p2;
-    _sprites.remove(line);
-    p1.neighbors_ids.remove(p2.id);
-    p2.neighbors_ids.remove(p1.id);
+    _lines.remove(line);
 
-    emit([..._sprites]);
+    emitSprites();
   }
 
   void _removeLoop(Loop loop) {
     var p = loop.point;
-    _sprites.remove(loop);
-    p.neighbors_ids.remove(p.id);
+    _loops.remove(loop);
 
-    emit([..._sprites]);
+    emitSprites();
   }
 
   void updateBullet(Line line, dx, dy) {
     line.p3.move(dx: dx, dy: dy);
-    emit([..._sprites]);
+    emitSprites();
   }
 
   void resetBullet(Line line) {
     line.p3.reset();
     _focusedID = UNFOCUSED;
-    emit([..._sprites]);
+    emitSprites();
   }
 
   void editEdge(Edge edge, double weight) {
     edge.weight = weight;
 
-    emit([..._sprites]);
+    emitSprites();
   }
 }
