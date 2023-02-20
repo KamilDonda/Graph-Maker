@@ -181,15 +181,12 @@ class SpritesCubit extends Cubit<List<Sprite>> {
   }
 
   void _removeLine(Line line) {
-    var p1 = line.p1;
-    var p2 = line.p2;
     _lines.remove(line);
 
     emitSprites();
   }
 
   void _removeLoop(Loop loop) {
-    var p = loop.point;
     _loops.remove(loop);
 
     emitSprites();
