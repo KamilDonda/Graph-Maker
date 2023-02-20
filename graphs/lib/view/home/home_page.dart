@@ -1,15 +1,31 @@
+import 'dart:html' as html;
+import 'dart:js' as js;
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:graphs/constants/sizes.dart';
-import 'package:graphs/models/sprite.dart';
 import 'package:graphs/view/home/cubit/right_menu/hinter_cubit.dart';
 import 'package:graphs/view/home/cubit/right_menu/right_menu_cubit.dart';
 import 'package:graphs/view/home/cubit/sprites_cubit.dart';
+import 'package:graphs/view/home/cubit/visibility/directed_graph_cubit.dart';
 import 'package:graphs/view/home/widgets/graph_area_widget.dart';
 import 'package:graphs/view/home/widgets/right_menu/right_menu_widget.dart';
+import 'package:screenshot/screenshot.dart';
+
+import 'cubit/visibility/weight_visibility_cubit.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({Key? key}) : super(key: key);
+  HomePage({Key? key}) : super(key: key);
+
+  final ScreenshotController controller = ScreenshotController();
+
+  void saveFile(Uint8List? capturedImage) {
+    js.context.callMethod("webSaveAs", [
+      html.Blob([capturedImage]),
+      "Graph.png"
+    ]);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,24 +45,43 @@ class HomePage extends StatelessWidget {
                         style: TextStyle(fontSize: 30),
                       ),
                       const Spacer(),
-                      BlocBuilder<SpritesCubit, List<Sprite>>(builder: (_, __) {
-                        var areVisible = BlocProvider.of<SpritesCubit>(context)
-                            .areWeightsVisible();
+                      BlocBuilder<DirectedGraphCubit, bool>(
+                          builder: (_, isGraphDirected) {
                         return ElevatedButton.icon(
                           onPressed: () {
-                            BlocProvider.of<SpritesCubit>(context)
-                                .toggleWeightsVisibility();
+                            BlocProvider.of<DirectedGraphCubit>(context)
+                                .toggleDirectedGraph();
                           },
-                          icon: Icon(areVisible
+                          icon: Icon(isGraphDirected
                               ? Icons.visibility_off
                               : Icons.visibility),
                           label: Text(
-                              areVisible ? "Hide weights" : "Show weights"),
+                              isGraphDirected ? "Hide arrows" : "Show arrows"),
                           style: ElevatedButton.styleFrom(
                               fixedSize: const Size(150, 40),
                               backgroundColor: Colors.grey),
                         );
                       }),
+                      const SizedBox(width: 10),
+                      BlocBuilder<WeightVisibilityCubit, bool>(
+                        builder: (_, areWeightsVisible) {
+                          return ElevatedButton.icon(
+                            onPressed: () {
+                              BlocProvider.of<WeightVisibilityCubit>(context)
+                                  .toggleWeightsVisibility();
+                            },
+                            icon: Icon(areWeightsVisible
+                                ? Icons.visibility_off
+                                : Icons.visibility),
+                            label: Text(areWeightsVisible
+                                ? "Hide weights"
+                                : "Show weights"),
+                            style: ElevatedButton.styleFrom(
+                                fixedSize: const Size(150, 40),
+                                backgroundColor: Colors.grey),
+                          );
+                        },
+                      ),
                       const SizedBox(width: 10),
                       ElevatedButton.icon(
                         onPressed: () {
@@ -55,8 +90,24 @@ class HomePage extends StatelessWidget {
                         icon: const Icon(Icons.clear),
                         label: const Text("Clear all"),
                         style: ElevatedButton.styleFrom(
-                            fixedSize: const Size(120, 40),
+                            fixedSize: const Size(150, 40),
                             backgroundColor: Colors.red),
+                      ),
+                      const SizedBox(width: 10),
+                      ElevatedButton.icon(
+                        onPressed: () {
+                          BlocProvider.of<SpritesCubit>(context).resetSprite();
+                          controller
+                              .capture(delay: const Duration(milliseconds: 50))
+                              .then((capturedImage) async {
+                            saveFile(capturedImage);
+                          });
+                        },
+                        icon: const Icon(Icons.download),
+                        label: const Text("Download"),
+                        style: ElevatedButton.styleFrom(
+                            fixedSize: const Size(150, 40),
+                            backgroundColor: Colors.green),
                       ),
                       const SizedBox(width: 10),
                     ],
@@ -66,7 +117,8 @@ class HomePage extends StatelessWidget {
                   height: 1,
                   thickness: 1,
                 ),
-                const Expanded(child: GraphAreaWidget()),
+                Expanded(
+                    child: GraphAreaWidget(screenshotController: controller)),
               ],
             ),
           ),

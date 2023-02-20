@@ -4,6 +4,7 @@ import 'package:graphs/constants/colors.dart';
 import 'package:graphs/constants/sizes.dart';
 import 'package:graphs/models/loop.dart';
 import 'package:graphs/view/home/cubit/sprites_cubit.dart';
+import 'package:graphs/view/home/cubit/visibility/weight_visibility_cubit.dart';
 import 'package:graphs/view/home/widgets/sprite_widget.dart';
 
 class LoopWidget extends SpriteWidget {
@@ -47,67 +48,76 @@ class LoopWidget extends SpriteWidget {
     final size = loop.point.size * 1.5;
     final radius = loop.point.size * 1.25;
     var background = BlocProvider.of<SpritesCubit>(context).background;
-    var areVisible = BlocProvider.of<SpritesCubit>(context).areWeightsVisible();
 
     bool isFocused =
         BlocProvider.of<SpritesCubit>(context).getFocusedID() == loop.id;
 
-    return Stack(children: [
-      Positioned(
-        top: background.y + loop.point.y.toDouble() + _top(size),
-        left: background.x + loop.point.x.toDouble() + _left(size),
-        child: Container(
-          width: size,
-          height: size,
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            color: Colors.transparent,
-            borderRadius: _borderRadius(radius),
-            border: Border.all(
-              color: Colors.black,
-              width: 2,
+    return Stack(
+      children: [
+        Positioned(
+          top: background.y + loop.point.y.toDouble() + _top(size),
+          left: background.x + loop.point.x.toDouble() + _left(size),
+          child: Container(
+            width: size,
+            height: size,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: Colors.transparent,
+              borderRadius: _borderRadius(radius),
+              border: Border.all(
+                color: Colors.black,
+                width: 2,
+              ),
             ),
           ),
         ),
-      ),
-      if (areVisible)
-        Positioned(
-            top: background.y +
-                loop.point.y.toDouble() +
-                _top(size) +
-                _weightTop(size),
-            left: background.x +
-                loop.point.x.toDouble() +
-                _left(size) +
-                _weightLeft(size),
-            child: GestureDetector(
-              onTapDown: (details) {
-                BlocProvider.of<SpritesCubit>(context).focusSprite(id: loop.id);
-              },
-              onSecondaryTap: () {
-                BlocProvider.of<SpritesCubit>(context).removeEdge(loop);
-              },
-              child: CircleAvatar(
-                radius: DEFAULT_WEIGHT_SIZE / 2,
-                backgroundColor: Colors.black,
-                child: CircleAvatar(
-                  radius: isFocused
-                      ? DEFAULT_WEIGHT_SIZE / 2 - 4
-                      : DEFAULT_WEIGHT_SIZE / 2 - 2,
-                  backgroundColor: isFocused
-                      ? backgroundColor.withAlpha(230)
-                      : backgroundColor,
-                  child: Text(
-                    loop.weight.toString(),
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 20,
-                      fontWeight: isFocused ? FontWeight.w900 : FontWeight.w600,
+        BlocBuilder<WeightVisibilityCubit, bool>(
+          builder: (_, areWeightsVisible) {
+            return areWeightsVisible
+                ? Positioned(
+                    top: background.y +
+                        loop.point.y.toDouble() +
+                        _top(size) +
+                        _weightTop(size),
+                    left: background.x +
+                        loop.point.x.toDouble() +
+                        _left(size) +
+                        _weightLeft(size),
+                    child: GestureDetector(
+                      onTapDown: (details) {
+                        BlocProvider.of<SpritesCubit>(context)
+                            .focusSprite(id: loop.id);
+                      },
+                      onSecondaryTap: () {
+                        BlocProvider.of<SpritesCubit>(context).removeEdge(loop);
+                      },
+                      child: CircleAvatar(
+                        radius: DEFAULT_WEIGHT_SIZE / 2,
+                        backgroundColor: Colors.black,
+                        child: CircleAvatar(
+                          radius: isFocused
+                              ? DEFAULT_WEIGHT_SIZE / 2 - 4
+                              : DEFAULT_WEIGHT_SIZE / 2 - 2,
+                          backgroundColor: isFocused
+                              ? backgroundColor.withAlpha(230)
+                              : backgroundColor,
+                          child: Text(
+                            loop.weight.toString(),
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 20,
+                              fontWeight:
+                                  isFocused ? FontWeight.w900 : FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-              ),
-            )),
-    ]);
+                  )
+                : Container();
+          },
+        ),
+      ],
+    );
   }
 }
